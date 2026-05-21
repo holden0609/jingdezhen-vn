@@ -17,6 +17,18 @@
  * ===========================
 **/
 
+/* 1. 先向瀏覽器註冊你的自訂字型 */
+@font-face {
+    font-family: 'healinefont'; /* 你自己取的字型名稱 */
+    src: url('../assets/fonts/headline.TTC') format('truetype'); /* 確保路徑與檔案名稱正確 */
+    font-weight: normal;
+    font-style: normal;
+}
+
+main-screen button {
+    font-family: 'healinefont', serif !important;
+}
+
 /* General Style */
 body {
 
@@ -264,4 +276,166 @@ input[type=range]::-ms-fill-upper {
     line-height: 1.8 !important;                            /* 舒適的閱讀行高 */
     font-size: 1.3rem !important;                           /* 略微放大字體提升排版質感 */
     text-align: center !important;                          /* 文字置中 */
+}
+
+/* ==========================================================================
+   終極破格置中：無視所有父層限制，強行對準「整個螢幕」正中央
+   ========================================================================== */
+
+main-screen [data-menu="main"],
+main-screen main-menu,
+main-screen .menu {
+    /* 💡 核心關鍵：改用 fixed 直接相對於整個瀏覽器視窗定位，徹底破壞左側盒子的限制 */
+    position: fixed !important;  
+    top: 75% !important;        /* 螢幕垂直 70% */
+    left: 50% !important;       /* 螢幕水平 50% */
+    transform: translate(-50%, -50%) !important; /* 運用位移達成完美的絕對置中 */
+    
+    /* 強制轉為垂直 Flex 排版，讓按鈕乖乖由上往下排 */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    
+    /* 徹底洗掉所有可能干擾的預設寬高與座標 */
+    width: max-content !important;
+    height: auto !important;
+    bottom: auto !important;
+    right: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    
+    /* 確保選單圖層絕對在最上層，不會被任何背景或元件遮擋 */
+    z-index: 99999 !important;   
+}
+
+/* 確保容器內的所有開頭按鈕外觀一致、文字水平置中 */
+main-screen button,
+main-screen [data-menu="main"] button,
+main-screen button[data-action] {
+    display: block !important;
+    width: 280px !important;       /* 統一按鈕寬度，排起來最整齊 */
+    text-align: center !important;  /* 按鈕內的文字絕對置中 */
+    margin: 12px 0 !important;     /* 按鈕與按鈕之間的上下垂直間距 */
+    padding: 12px 20px !important; /* 讓按鈕格子看起來更大氣 */
+    
+    font-size: 1.3rem !important;  /* 稍微放大字體 */
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+main-screen::before {
+    /* 💡 在這裡輸入你的遊戲標題，\A 代表換行 */
+    content: "大洋上的瓷風\A明代瓷器藝術交流" !important;
+    white-space: pre-wrap !important; /* 讓 \A 換行指令生效 */
+    
+    /* 絕對定位在畫面的上半部 */
+    position: fixed !important;
+    top: 35% !important;            /* 距離螢幕頂部 35% 的位置 */
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    
+    /* 字型與外觀設計 */
+    font-family: 'healinefont', serif !important; /* 套用你的自訂字型 */
+    font-size: 3.5rem !important;                /* 主標題大小 */
+    color: #ffffff !important;                   /* 文字顏色（白色） */
+    text-align: center !important;
+    line-height: 1.5 !important;
+    
+    /* 文字陰影：讓文字在任何背景圖上都清晰可見 */
+    text-shadow: 0 0 15px rgba(0, 0, 0, 0.6), 0 0 5px rgba(0, 0, 0, 0.8) !important;
+    
+    z-index: 9999 !important; /* 確保層級在背景之上 */
+}
+
+/* ==========================================================================
+   自訂互動小遊戲：控溫燒窯 UI 與動畫效果
+   ========================================================================== */
+
+/* 1. 覆蓋全螢幕的黑色半透明背景 */
+#kiln-game-overlay {
+    position: fixed !important;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 100000 !important; /* 確保在最最最上層 */
+}
+
+/* 2. 遊戲主視窗 */
+#kiln-game-overlay .game-box {
+    background: #2c1e14; /* 古典暗木色 */
+    border: 3px solid #d4af37; /* 金色邊框 */
+    border-radius: 12px;
+    padding: 30px; width: 450px; text-align: center;
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
+    color: #fff;
+    font-family: 'healinefont', serif; /* 套用你的古典字型 */
+}
+
+#kiln-game-overlay h3 { font-size: 1.8rem; margin-bottom: 10px; color: #ff6600; }
+#kiln-game-overlay p { font-size: 1rem; color: #ccc; margin-bottom: 25px; }
+
+/* 3. 計量條容器 */
+#kiln-game-overlay .bar-container {
+    position: relative;
+    width: 100%; height: 30px;
+    background: #444; border-radius: 15px; margin-bottom: 30px;
+    overflow: hidden; border: 2px solid #666;
+}
+
+/* 4. 黃金核心目標區（置中 40% ~ 60% 的寬度） */
+#kiln-game-overlay .target-zone {
+    position: absolute;
+    left: 40%; width: 20%; height: 100%;
+    background: linear-gradient(90deg, #ffcc00, #ff6600, #ffcc00);
+    box-shadow: 0 0 10px #ffcc00;
+}
+
+/* 5. 來回移動的火候指針 */
+#game-pointer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 8px; height: 100%;
+    background: #ffffff;
+    box-shadow: 0 0 8px #ffffff, 0 0 15px #ff0000;
+    transform: translateX(-50%);
+}
+
+/* 6. 遊戲控制按鈕 */
+#fire-btn {
+    background: #8b0000 !important;
+    color: #fff !important; width: 80% !important;
+    padding: 12px !important; font-size: 1.2rem !important;
+    border-radius: 8px !important; border: 1px solid #ff0000 !important;
+    margin: 0 auto !important; cursor: pointer;
+    transition: transform 0.1s ease;
+}
+#fire-btn:active { transform: scale(0.95); }
+
+/* ==========================================================================
+   ✨ 特效動畫：成功閃爍與失敗震動
+   ========================================================================== */
+
+/* 成功時：金光閃爍特效 */
+.game-success-flash .game-box {
+    animation: successGlow 0.5s ease-in-out infinite alternate;
+    border-color: #00ffcc !important;
+}
+@keyframes successGlow {
+    from { box-shadow: 0 0 20px rgba(0, 255, 200, 0.5); }
+    to { box-shadow: 0 0 40px rgba(0, 255, 200, 0.9); }
+}
+
+/* 失敗時：劇烈搖晃震動特效 */
+.game-fail-shake .game-box {
+    animation: shakeWindow 0.15s ease-in-out infinite;
+    border-color: #ff0000 !important;
+}
+@keyframes shakeWindow {
+    0% { transform: translate(2px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(0px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
 }

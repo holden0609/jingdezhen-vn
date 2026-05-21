@@ -17,7 +17,7 @@ monogatari.settings({
 	// The name of your game, this will be used to store all the data so once
 	// you've released a game using one name, it shouldn't change. Please use the
 	// Version Setting to indicate a new release of your game!
-	'Name': 'My Visual Novel',
+	'Name': '大洋上的瓷風：明代瓷器藝術交流',
 
 	// The version of your game in semantic versioning (https://semver.org/).
 	'Version': '0.1.0',
@@ -35,7 +35,7 @@ monogatari.settings({
 	// language selection screen that will be shown before the asset loading
 	// screen. If set to false, the loading screen will appear first instead and
 	// players will have to change the language from the settings screen.
-	'LanguageSelectionScreen': true,
+	'LanguageSelectionScreen': false,
 
 	// Music for the Main Menu.
 	'MainScreenMusic': '',
@@ -152,8 +152,8 @@ monogatari.settings({
 // Initial Settings
 monogatari.preferences ({
 
-	// Initial Language for Multilanguage Games or for the Default GUI Language.
-	'Language': 'English',
+// Initial Language for Multilanguage Games or for the Default GUI Language.
+	'Language': '繁體中文', 
 
 	// Initial Volumes from 0.0 to 1.
 	'Volume': {

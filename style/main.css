@@ -141,30 +141,58 @@ input[type=range]::-ms-fill-upper { }
    ------------------------------------------------------------------------- */
 #kiln-game-overlay {
     position: fixed !important;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0, 0, 0, 0.75);
+    top: 0; left: 0; 
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
     display: flex; justify-content: center; align-items: center;
     z-index: 100000 !important;
+    padding: 10px; /* 防止小螢幕手機貼邊 */
+    box-sizing: border-box;
 }
 
 #kiln-game-overlay .game-box {
     background: #2c1e14;
     border: 3px solid #d4af37;
     border-radius: 12px;
-    padding: 30px; width: 450px; text-align: center;
+    padding: 4vh 25px; /* 隨螢幕高度動態縮減上下間距 */
+    width: 90%;
+    max-width: 440px; /* 電腦端最大寬度 */
+    max-height: 90vh; /* 限制最大高度，防止手機端溢出螢幕 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
     color: #fff;
     font-family: 'healinefont', serif;
+    box-sizing: border-box;
+    overflow-y: auto; /* 萬一極小螢幕也能滾動觀看 */
 }
 
-#kiln-game-overlay h3 { font-size: 1.8rem; margin-bottom: 10px; color: #ff6600; }
-#kiln-game-overlay p { font-size: 1rem; color: #ccc; margin-bottom: 25px; }
+#kiln-game-overlay h3 { 
+    font-size: clamp(1.3rem, 4vh, 1.8rem); /* 根據螢幕尺寸動態縮放字體 */
+    margin: 0 0 5px 0; 
+    color: #ff6600; 
+}
 
+#kiln-game-overlay p { 
+    font-size: clamp(0.85rem, 2.5vh, 1rem); 
+    color: #ccc; 
+    margin: 0 0 4vh 0; 
+    line-height: 1.4;
+}
+
+/* 計量條容器：改用百分比與 vh 控制，適配矮螢幕手機 */
 #kiln-game-overlay .bar-container {
     position: relative;
-    width: 100%; height: 30px;
-    background: #444; border-radius: 15px; margin-bottom: 30px;
-    overflow: hidden; border: 2px solid #666;
+    width: 100%; 
+    height: clamp(20px, 5vh, 32px); /* 在手機上自動變窄，不擠佔空間 */
+    background: #444; 
+    border-radius: 15px; 
+    margin-bottom: 4vh;
+    overflow: hidden; 
+    border: 2px solid #666;
+    box-sizing: border-box;
 }
 
 #kiln-game-overlay .target-zone {
@@ -182,16 +210,42 @@ input[type=range]::-ms-fill-upper { }
     transform: translateX(-50%);
 }
 
+/* 🌟 加大按鈕的觸控範圍，防止手機上手指點不到，並阻斷手機預設的點擊延遲 */
 #fire-btn {
     background: #8b0000 !important;
-    color: #fff !important; width: 80% !important;
-    padding: 12px !important; font-size: 1.2rem !important;
-    border-radius: 8px !important; border: 1px solid #ff0000 !important;
-    margin: 0 auto !important; cursor: pointer;
+    color: #fff !important; 
+    width: 85% !important;
+    max-width: 280px !important;
+    padding: clamp(10px, 2.5vh, 15px) !important; /* 確保按鈕在手機上有足夠肥度好按 */
+    font-size: clamp(1rem, 3vh, 1.2rem) !important;
+    border-radius: 8px !important; 
+    border: 1px solid #ff0000 !important;
+    margin: 0 auto !important; 
+    cursor: pointer;
+    touch-action: manipulation; /* ⚡ 關鍵：優化行動裝置觸控反應速度 */
     transition: transform 0.1s ease;
 }
-#fire-btn:active { transform: scale(0.95); }
 
+#fire-btn:active { 
+    transform: scale(0.95); 
+}
+
+/* 手機橫螢幕（Landscape）特殊加強優化：當手機橫過來、且高度很矮時 */
+@media screen and (max-height: 450px) and (orientation: landscape) {
+    #kiln-game-overlay .game-box {
+        padding: 15px 20px;
+        flex-direction: row; /* 改為左右並排，左邊文字右邊操作 */
+        flex-wrap: wrap;
+        max-width: 550px;
+        justify-content: space-between;
+    }
+    #kiln-game-overlay h3 { width: 100%; text-align: center; margin-bottom: 2px; }
+    #kiln-game-overlay p { width: 100%; text-align: center; margin-bottom: 10px; }
+    #kiln-game-overlay .bar-container { width: 55%; margin-bottom: 0; }
+    #fire-btn { width: 40% !important; margin: 0 !important; padding: 8px !important; }
+}
+
+/* 舊有的動畫維持不變 */
 .game-success-flash .game-box {
     animation: successGlow 0.5s ease-in-out infinite alternate;
     border-color: #00ffcc !important;

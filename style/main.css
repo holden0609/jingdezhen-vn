@@ -3,11 +3,6 @@
  * This is the file where all your styling should go in.
  * Instead of modifying the styles found in the monogatari.css file or others,
  * you should overwrite those styles in this file.
- *
- * The CSS selectors shown are not an extensive list but they are the most
- * common you might want to change. To find what other elements are available,
- * you can take a look at the monogatari.css file or use your browser's dev
- * tools to inspect the elements.
  * =============================================================================
 **/
 
@@ -17,10 +12,10 @@
  * ===========================
 **/
 
-/* 1. 先向瀏覽器註冊你的自訂字型 */
 @font-face {
-    font-family: 'healinefont'; /* 你自己取的字型名稱 */
-    src: url('../assets/fonts/headline.TTC') format('truetype'); /* 確保路徑與檔案名稱正確 */
+    font-family: 'healinefont';
+    /* 💡 必須使用健康、無損壞的標準單一字型檔 .ttf，阻斷 OTS 系統解碼錯誤 */
+    src: url('../assets/fonts/headline.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -29,353 +24,142 @@ main-screen button {
     font-family: 'healinefont', serif !important;
 }
 
-/* General Style */
-body {
-
-}
-
-/* Simple Button styles*/
-button {
-
-}
-
-/* Simple Button Style on Hover */
-button:hover {
-
-}
-
-/* General Styling for Menu Screens */
-[data-screen] {
-
-}
+body { }
+button { }
+button:hover { }
+[data-screen] { }
 
 /**
  * ===========================
  * Main Menu Styling
  * ===========================
 **/
-
-/* Main Menu Styling */
-[data-screen="main"] {
-
-}
-
-/* Main Menu Buttons Styling */
-[data-screen="main"] button {
-
-}
+[data-screen="main"] { }
+[data-screen="main"] button { }
 
 /**
  * ===========================
  * Save and Load Menus Styling
  * ===========================
 **/
-
-/* Slots Style */
-[data-component="save-slot"] figure {
-
-}
-
-/* Slot's Image Style */
-[data-component="save-slot"] img {
-
-}
-
-/* Slots Title Style */
-[data-component="save-slot"] figcaption {
-
-}
-
-/* Slots Delete Button Style */
-[data-component="save-slot"] button {
-
-}
+[data-component="save-slot"] figure { }
+[data-component="save-slot"] img { }
+[data-component="save-slot"] figcaption { }
+[data-component="save-slot"] button { }
 
 /**
  * ===========================
  * Game Elements Styling
  * ===========================
 **/
-
-/* Choice Buttons style */
-[data-component="choice-container"] button {
-
-}
-
-/* Choice Button Style on Hover */
-[data-component="choice-container"] button:hover {
-
-}
-
-/* Text Box styling */
-[data-component="text-box"] {
-
-}
-
-/* Character Name Style */
-[data-ui="who"] {
-
-}
-
-/* Style for Centered Text */
-[data-component="centered-dialog"] {
-
-}
-
-/* Character Images Styles */
-[data-screen="game"] [data-character] {
-
-}
-
-/* Other Images Styles */
-[data-screen="game"] [data-image] {
-
-}
+[data-component="choice-container"] button { }
+[data-component="choice-container"] button:hover { }
+[data-component="text-box"] { }
+[data-ui="who"] { }
+[data-component="centered-dialog"] { }
+[data-screen="game"] [data-character] { }
+[data-screen="game"] [data-image] { }
 
 /**
  * ===========================
  * Quick Menu Styling
  * ===========================
 **/
-
-/* These styles are applied to the Mobile version of the Quick Menu */
-
-/* Quick Menu Style */
-[data-component="quick-menu"] {
-
-}
-
-/* Quick Menu Buttons Style */
-[data-component="quick-menu"] span {
-
-}
-
-/* Quick Menu Buttons Style on Hover */
-[data-component="quick-menu"] span:hover {
-
-}
-
-/* Quick Menu Buttons Icon Style */
-[data-component="quick-menu"] > span > .fa {
-
-}
+[data-component="quick-menu"] { }
+[data-component="quick-menu"] span { }
+[data-component="quick-menu"] span:hover { }
+[data-component="quick-menu"] > span > .fa { }
 
 /**
  * ===========================
  * Range Styling
  * ===========================
 **/
-
-/* Use the background property to set a color for these */
-input[type=range]:focus::-webkit-slider-runnable-track {
-
-}
-
-input[type=range]::-webkit-slider-runnable-track {
-
-}
-
-input[type=range]:focus::-ms-fill-upper {
-
-}
-
-input[type=range]:focus::-ms-fill-lower {
-
-}
-
-input[type=range]::-moz-range-track {
-
-}
-
-input[type=range]::-ms-fill-lower {
-
-}
-
-input[type=range]::-ms-fill-upper {
-
-}
+input[type=range]:focus::-webkit-slider-runnable-track { }
+input[type=range]::-webkit-slider-runnable-track { }
+input[type=range]:focus::-ms-fill-upper { }
+input[type=range]:focus::-ms-fill-lower { }
+input[type=range]::-moz-range-track { }
+input[type=range]::-ms-fill-lower { }
+input[type=range]::-ms-fill-upper { }
 
 /** Medium Screens, Phablets (601px) **/
 @media screen and (min-width: 37.56255em) {
-	/* Styles for the desktop version of the Quick Menu */
-
-	/* Quick Menu Style */
-	[data-component="quick-menu"] {
-
-	}
-
-	/* Quick Menu Buttons Style */
-	[data-component="quick-menu"] span {
-
-	}
-
-	/* Quick Menu Buttons Style on Hover */
-	[data-component="quick-menu"] span:hover {
-
-	}
+	[data-component="quick-menu"] { }
+	[data-component="quick-menu"] span { }
+	[data-component="quick-menu"] span:hover { }
 }
 
 /** Medium Devices, Tablets (992px)**/
-@media screen and (min-width: 62em) {
-
-}
-
+@media screen and (min-width: 62em) { }
 /** HD Screen, Large Devices, Wide Screens, Desktop (1200px) **/
-@media screen and (min-width: 75em) {
-
-}
-
+@media screen and (min-width: 75em) { }
 /** Full HD Screen, Large Devices, Wide Screens, Large Desktops (1920px) **/
-@media screen and (min-width: 120em) {
-
-}
-
+@media screen and (min-width: 120em) { }
 /** Retina Screen , Large Devices, Wide Screens(2560px) **/
-@media screen and (min-width: 160em) {
-
-}
-
+@media screen and (min-width: 160em) { }
 /** 4k Screens, Large Devices, Wide Screens (3840px) **/
-@media screen and (min-width: 240em) {
-
-}
-
+@media screen and (min-width: 240em) { }
 /** 5k Screens, Large Devices, Wide Screens (5000px) **/
-@media screen and (min-width: 312.5em) {
-
-}
-
+@media screen and (min-width: 312.5em) { }
 /** 8k Screens, Large Devices, Wide Screens (8000px) **/
-@media screen and (min-width: 500em) {
+@media screen and (min-width: 500em) { }
 
-}
 
 /* =============================================================================
-   讓 Monogatari 的 centered 全螢幕文字擁有優雅的半透明白底黑字卡片
+   後續新增之自訂功能客製化區塊（已清理重複與衝突代碼）
    ============================================================================= */
+
+/* -------------------------------------------------------------------------
+   功能 A：劇情文字排版（centered 全螢幕文字卡片）
+   ------------------------------------------------------------------------- */
 [data-component="centered-dialog"] {
-    /* 保持背景有一層淡淡的黑色半透明遮罩，襯托出中間的卡片 */
     background: rgba(0, 0, 0, 0.4) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
 }
 
-/* 💡 修正點：多重選擇器，確保不論引擎使用 p, span, div 還是 data-ui="say" 都能完美變成高級白底字卡 */
 [data-component="centered-dialog"] p,
 [data-component="centered-dialog"] span,
 [data-component="centered-dialog"] div,
 [data-component="centered-dialog"] [data-ui="say"] {
-    background-color: rgba(255, 255, 255, 0.95) !important; /* 95% 不透明度的優雅白底 */
-    color: #1a1a1a !important;                             /* 深灰黑色文字，提供極高對比度 */
-    padding: 25px 45px !important;                          /* 卡片內留白，讓視覺更舒適 */
-    border-radius: 12px !important;                         /* 現代感圓角 */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;  /* 懸浮立體陰影 */
-    display: inline-block !important;                       /* 讓白底寬度自動隨文字長短縮放 */
-    max-width: 75% !important;                              /* 防止文字在寬螢幕拉得太長 */
-    line-height: 1.8 !important;                            /* 舒適的閱讀行高 */
-    font-size: 1.3rem !important;                           /* 略微放大字體提升排版質感 */
-    text-align: center !important;                          /* 文字置中 */
-}
-
-/* ==========================================================================
-   終極破格置中：無視所有父層限制，強行對準「整個螢幕」正中央
-   ========================================================================== */
-
-main-screen [data-menu="main"],
-main-screen main-menu,
-main-screen .menu {
-    /* 💡 核心關鍵：改用 fixed 直接相對於整個瀏覽器視窗定位，徹底破壞左側盒子的限制 */
-    position: fixed !important;  
-    top: 75% !important;        /* 螢幕垂直 70% */
-    left: 50% !important;       /* 螢幕水平 50% */
-    transform: translate(-50%, -50%) !important; /* 運用位移達成完美的絕對置中 */
-    
-    /* 強制轉為垂直 Flex 排版，讓按鈕乖乖由上往下排 */
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    
-    /* 徹底洗掉所有可能干擾的預設寬高與座標 */
-    width: max-content !important;
-    height: auto !important;
-    bottom: auto !important;
-    right: auto !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    
-    /* 確保選單圖層絕對在最上層，不會被任何背景或元件遮擋 */
-    z-index: 99999 !important;   
-}
-
-/* 確保容器內的所有開頭按鈕外觀一致、文字水平置中 */
-main-screen button,
-main-screen [data-menu="main"] button,
-main-screen button[data-action] {
-    display: block !important;
-    width: 280px !important;       /* 統一按鈕寬度，排起來最整齊 */
-    text-align: center !important;  /* 按鈕內的文字絕對置中 */
-    margin: 12px 0 !important;     /* 按鈕與按鈕之間的上下垂直間距 */
-    padding: 12px 20px !important; /* 讓按鈕格子看起來更大氣 */
-    
-    font-size: 1.3rem !important;  /* 稍微放大字體 */
-    cursor: pointer !important;
-    transition: all 0.3s ease !important;
-}
-
-main-screen::before {
-    /* 💡 在這裡輸入你的遊戲標題，\A 代表換行 */
-    content: "大洋上的瓷風\A明代瓷器藝術交流" !important;
-    white-space: pre-wrap !important; /* 讓 \A 換行指令生效 */
-    
-    /* 絕對定位在畫面的上半部 */
-    position: fixed !important;
-    top: 35% !important;            /* 距離螢幕頂部 35% 的位置 */
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    
-    /* 字型與外觀設計 */
-    font-family: 'healinefont', serif !important; /* 套用你的自訂字型 */
-    font-size: 3.5rem !important;                /* 主標題大小 */
-    color: #ffffff !important;                   /* 文字顏色（白色） */
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    color: #1a1a1a !important;
+    padding: 25px 45px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+    display: inline-block !important;
+    max-width: 75% !important;
+    line-height: 1.8 !important;
+    font-size: 1.3rem !important;
     text-align: center !important;
-    line-height: 1.5 !important;
-    
-    /* 文字陰影：讓文字在任何背景圖上都清晰可見 */
-    text-shadow: 0 0 15px rgba(0, 0, 0, 0.6), 0 0 5px rgba(0, 0, 0, 0.8) !important;
-    
-    z-index: 9999 !important; /* 確保層級在背景之上 */
 }
 
-/* ==========================================================================
-   自訂互動小遊戲：控溫燒窯 UI 與動畫效果
-   ========================================================================== */
-
-/* 1. 覆蓋全螢幕的黑色半透明背景 */
+/* -------------------------------------------------------------------------
+   功能 B：互動小遊戲 UI（控溫燒窯計量條與動畫）
+   ------------------------------------------------------------------------- */
 #kiln-game-overlay {
     position: fixed !important;
     top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0, 0, 0, 0.75);
     display: flex; justify-content: center; align-items: center;
-    z-index: 100000 !important; /* 確保在最最最上層 */
+    z-index: 100000 !important;
 }
 
-/* 2. 遊戲主視窗 */
 #kiln-game-overlay .game-box {
-    background: #2c1e14; /* 古典暗木色 */
-    border: 3px solid #d4af37; /* 金色邊框 */
+    background: #2c1e14;
+    border: 3px solid #d4af37;
     border-radius: 12px;
     padding: 30px; width: 450px; text-align: center;
     box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
     color: #fff;
-    font-family: 'healinefont', serif; /* 套用你的古典字型 */
+    font-family: 'healinefont', serif;
 }
 
 #kiln-game-overlay h3 { font-size: 1.8rem; margin-bottom: 10px; color: #ff6600; }
 #kiln-game-overlay p { font-size: 1rem; color: #ccc; margin-bottom: 25px; }
 
-/* 3. 計量條容器 */
 #kiln-game-overlay .bar-container {
     position: relative;
     width: 100%; height: 30px;
@@ -383,7 +167,6 @@ main-screen::before {
     overflow: hidden; border: 2px solid #666;
 }
 
-/* 4. 黃金核心目標區（置中 40% ~ 60% 的寬度） */
 #kiln-game-overlay .target-zone {
     position: absolute;
     left: 40%; width: 20%; height: 100%;
@@ -391,17 +174,14 @@ main-screen::before {
     box-shadow: 0 0 10px #ffcc00;
 }
 
-/* 5. 來回移動的火候指針 */
 #game-pointer {
     position: absolute;
-    top: 0; left: 0;
-    width: 8px; height: 100%;
+    top: 0; left: 0; width: 8px; height: 100%;
     background: #ffffff;
     box-shadow: 0 0 8px #ffffff, 0 0 15px #ff0000;
     transform: translateX(-50%);
 }
 
-/* 6. 遊戲控制按鈕 */
 #fire-btn {
     background: #8b0000 !important;
     color: #fff !important; width: 80% !important;
@@ -412,11 +192,6 @@ main-screen::before {
 }
 #fire-btn:active { transform: scale(0.95); }
 
-/* ==========================================================================
-   ✨ 特效動畫：成功閃爍與失敗震動
-   ========================================================================== */
-
-/* 成功時：金光閃爍特效 */
 .game-success-flash .game-box {
     animation: successGlow 0.5s ease-in-out infinite alternate;
     border-color: #00ffcc !important;
@@ -426,7 +201,6 @@ main-screen::before {
     to { box-shadow: 0 0 40px rgba(0, 255, 200, 0.9); }
 }
 
-/* 失敗時：劇烈搖晃震動特效 */
 .game-fail-shake .game-box {
     animation: shakeWindow 0.15s ease-in-out infinite;
     border-color: #ff0000 !important;
@@ -438,4 +212,92 @@ main-screen::before {
     30% { transform: translate(0px, 2px) rotate(0deg); }
     40% { transform: translate(1px, -1px) rotate(1deg); }
     50% { transform: translate(-1px, 2px) rotate(-1deg); }
+}
+
+/* -------------------------------------------------------------------------
+   功能 C：舞台立繪佈局（徹底阻斷內建居中拉力，防止立繪錯位）
+   ------------------------------------------------------------------------- */
+.player-giant-right, .salem-giant-right, .wang-giant-right, .master-giant-right, .godness-giant-right {
+    position: absolute !important;
+    right: 0% !important; left: auto !important; transform: none !important; bottom: 0px !important;
+	height: 110vh !important; width: auto !important; object-fit: contain !important;
+    overflow: visible !important; transform-origin: bottom right !important; z-index: 10 !important;
+}
+
+.player-giant-left, .master-giant-left, .salem-giant-left, .wang-giant-left, .godness-giant-left {
+    position: absolute !important;
+    left: 0% !important; right: auto !important; transform: none !important; bottom: 0px !important;
+    height: 110vh !important; width: auto !important; object-fit: contain !important;
+    overflow: visible !important; transform-origin: bottom left !important; z-index: 10 !important;
+}
+
+/* -------------------------------------------------------------------------
+   功能 D：主頁頁面切換優化（修復版：不破壞隱藏機制，按鈕置底橫排）
+   ------------------------------------------------------------------------- */
+
+/* 用自製的背景圖填滿整個主選單畫面 */
+main-screen {
+    background-image: url('../assets/scenes/00181.webp') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    /* 🌟 核心修正：移除內層的 display: flex，將控制權還給引擎，避免頁面切換時不消失 */
+}
+
+/* 用 CSS 完美隱藏原廠文字標題 */
+main-screen h1 {
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+/* 🌟 將按鈕容器改為「絕對定位」並擺在底部，這樣既能橫向排開，又完全不干擾頁面切換 */
+main-menu {
+    position: absolute !important;
+    bottom: 60px !important;   /* 距離底部的高度 */
+    left: 50% !important;
+    transform: translateX(-50%) !important; /* 水平完美置中 */
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 15px !important;
+    width: 90% !important;
+    max-width: 1100px !important;
+    background: none !important;
+    box-shadow: none !important;
+    z-index: 999 !important;
+}
+
+/* 統一美化主選單內按鈕的樣式 */
+main-menu menu-button,
+main-menu button,
+main-menu .custom-menu-btn {
+    flex: 1 !important;
+    min-width: 120px !important;
+    padding: 12px 10px !important;
+    background-color: rgba(20, 25, 35, 0.85) !important;
+    border: 2px solid #b89254 !important;
+    border-radius: 6px !important;
+    color: #ffffff !important;
+    font-size: 1rem !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease-in-out !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* 滑鼠懸停（Hover）時的發光特效 */
+main-menu menu-button:hover,
+main-menu button:hover,
+main-menu .custom-menu-btn:hover {
+    background-color: #b89254 !important;
+    color: #12161a !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 6px 15px rgba(184, 146, 84, 0.5) !important;
 }

@@ -164,6 +164,7 @@ monogatari.script ({
     // ===== 第一幕：開端與形象選擇 =====
     'Start': [
         // 🌟 每次重新開局，強制將所有路線進度清空歸零
+
         function () {
             monogatari.storage({
                 route_master_completed: false,
@@ -173,7 +174,7 @@ monogatari.script ({
             return true;
         },
 
-        'show scene black with fadeIn', 
+        'show scene black with fadeIn',
         'centered 有一日，你正在房間裡面埋頭趕著報告時',
         'centered 突然感到一陣心悸，眼前一黑，便倒在了電腦前...',
         'centered 在朦朧中，你聽到了一個溫暖而又威嚴的聲音在呼喚你',
@@ -391,24 +392,31 @@ monogatari.script ({
         // 🎮 嵌入小遊戲：泥料大作戰（配比滑桿 - 碎裂懲罰版）
         // =========================================================================
         function () {
-            // 1. 動態注入小遊戲專屬的精美 CSS 樣式
+            // 1. 動態注入小遊戲專屬的精美 CSS 樣式（完美自適應補強，防擠壓爆版）
             if (!document.getElementById('clay-game-style')) {
                 const style = document.createElement('style');
                 style.id = 'clay-game-style';
                 style.innerHTML = `
+                    /* 🛡️ 核心防護：確保所有 Padding 與邊框計算不會撐擠爆版面 */
+                    #clay-game-overlay *, #clay-game-overlay *::before, #clay-game-overlay *::after {
+                        box-sizing: border-box;
+                    }
+
                     #clay-game-overlay {
-                        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+                        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
                         background: rgba(0, 0, 0, 0.85); z-index: 9999;
                         display: flex; justify-content: center; align-items: center;
                         font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
                         color: #fff;
+                        padding: 15px;
                     }
                     .clay-box {
-                        background: rgba(25, 25, 25, 0.95); width: 550px; padding: 30px;
+                        background: rgba(25, 25, 25, 0.95); width: 100%; max-width: 550px; padding: 30px;
                         border-radius: 16px; border: 2px solid #da9e47; text-align: center;
                         box-shadow: 0 15px 40px rgba(0,0,0,0.8); position: relative;
+                        max-height: 95vh; overflow-y: auto; /* 預防矮螢幕或手機橫放時內容被裁切 */
                     }
-                    .clay-title { color: #da9e47; margin-bottom: 5px; font-size: 1.6rem; letter-spacing: 2px; }
+                    .clay-title { color: #da9e47; margin-bottom: 5px; font-size: 1.6rem; letter-spacing: 2px; font-weight: bold; }
                     .task-card {
                         background: rgba(255,255,255,0.08); border-left: 4px solid #da9e47;
                         padding: 12px; margin: 15px 0; border-radius: 4px; text-align: left;
@@ -447,9 +455,9 @@ monogatari.script ({
                     }
                     .state-perfect { animation: spin-glow 1.5s linear infinite !important; background: #eadecc !important; border: 2px solid #fff; }
                     
-                    /* 💥 核心新功能：劇烈震動並瞬間碎裂消失的動畫 */
+                    /* 💥 劇烈震動並瞬間碎裂消失的動畫 */
                     @keyframes shatter-burst {
-                        0% { transform: translate(0, 0) scale(1); filter: brighness(1.2); }
+                        0% { transform: translate(0, 0) scale(1); filter: brightness(1.2); }
                         10% { transform: translate(-4px, 3px) rotate(-2deg); }
                         20% { transform: translate(4px, -3px) rotate(3deg); }
                         30% { transform: translate(-3px, -2px) rotate(-3deg); }
@@ -462,9 +470,9 @@ monogatari.script ({
                     /* 🎛️ 滑桿控制區 */
                     .slider-group { margin: 20px 0; }
                     .slider-row { display: flex; align-items: center; margin: 12px 0; }
-                    .slider-label { width: 120px; text-align: left; font-size: 1rem; font-weight: bold; }
-                    .slider-input { flex: 1; accent-color: #da9e47; cursor: pointer; height: 8px; }
-                    .slider-val { width: 60px; text-align: right; font-family: monospace; font-size: 1.1rem; color: #da9e47; }
+                    .slider-label { width: 120px; text-align: left; font-size: 1rem; font-weight: bold; shrink: 0; }
+                    .slider-input { flex: 1; accent-color: #da9e47; cursor: pointer; height: 8px; min-width: 0; }
+                    .slider-val { width: 60px; text-align: right; font-family: monospace; font-size: 1.1rem; color: #da9e47; shrink: 0; }
                     
                     /* 🎯 按鈕 */
                     .clay-btn {
@@ -474,10 +482,33 @@ monogatari.script ({
                         transition: all 0.2s; margin-top: 10px; width: 100%;
                     }
                     .clay-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 20px rgba(218,158,71,0.4); }
-                    .clay-btn:disabled { background: #555; color: #888; cursor: not-allowed; transform: none; box-shadow: none; }
+                    .clay-btn:disabled { background: #555; color: #888; cursor: not-allowed; transform: none; box-shadow: none; linear-gradient: none; }
                     
                     .success-tip { color: #5cb85c; font-size: 1.4rem; font-weight: bold; margin-top: 15px; display: none; min-height: 33px;}
-                    .fail-tip { color: #d9534f; font-size: 1.2rem; font-weight: bold; margin-top: 15px; display: none; min-height: 33px; animation: pulse 1s infinite;}
+                    .fail-tip { color: #d9534f; font-size: 1.2rem; font-weight: bold; margin-top: 15px; display: none; min-height: 33px; }
+
+                    /* ======================================================= */
+                    /* 📱【窄螢幕行動端專屬 RWD 響應規則，優化文字與滑桿體驗】 */
+                    /* ======================================================= */
+                    @media (max-width: 500px) {
+                        .clay-box { padding: 20px 15px; }
+                        .clay-title { font-size: 1.3rem; }
+                        .task-card { padding: 10px; margin: 12px 0; }
+                        .task-name { font-size: 1rem; }
+                        .task-target { font-size: 0.8rem; }
+                        
+                        /* 縮小行動端拉坯展示槽，騰出垂直空間 */
+                        .clay-display-container { height: 140px; margin: 15px 0; }
+                        
+                        /* 💡 重點優化：縮短標籤與數值寬度，釋放滑桿長度，讓手指更好微調配比 */
+                        .slider-label { width: 90px; font-size: 0.9rem; }
+                        .slider-val { width: 45px; font-size: 1rem; }
+                        .slider-row { margin: 8px 0; }
+                        
+                        .clay-btn { padding: 10px 20px; font-size: 1rem; }
+                        .success-tip { font-size: 1.2rem; }
+                        .fail-tip { font-size: 1rem; }
+                    }
                 `;
                 document.head.appendChild(style);
             }
@@ -553,7 +584,7 @@ monogatari.script ({
                 osc1.start(); osc1.stop(ctx.currentTime + 1.2); osc2.start(); osc2.stop(ctx.currentTime + 0.8);
             }
 
-            // 🎵 新增功能：Web Audio API 模擬「陶瓷激烈碎裂聲」
+            // 🎵 Web Audio API 模擬「陶瓷激烈碎裂聲」
             function playShatterSound() {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 if (!AudioContext) return;
@@ -703,7 +734,7 @@ monogatari.script ({
 
             updateClayVisuals();
             return false; 
-        },
+},
 
         // =========================================================================
         // 🎬 小遊戲通關後的後續對話與分流
@@ -747,19 +778,25 @@ monogatari.script ({
         '於是，你們一同走向了倉儲區',
         
         function () {
-        // 1. 動態注入名瓷鑑賞專屬的精美 CSS 樣式
+        // 1. 動態注入名瓷鑑賞專專屬的精美 CSS 樣式（完美保留桌機，僅在行動端進行彈性優化）
         if (!document.getElementById('porcelain-gallery-style')) {
             const style = document.createElement('style');
             style.id = 'porcelain-gallery-style';
             style.innerHTML = `
+                /* 🛡️ 核心防護：確保 Padding 與邊框計算不會撐擠爆版面 */
+                #gallery-overlay *, #gallery-overlay *::before, #gallery-overlay *::after {
+                    box-sizing: border-box;
+                }
+
                 #gallery-overlay {
-                    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+                    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
                     background: rgba(10, 10, 10, 0.9); z-index: 9999;
                     display: flex; justify-content: center; align-items: center;
                     font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+                    padding: 20px;
                 }
                 .gallery-box {
-                    width: 850px; background: rgba(25, 25, 25, 0.95);
+                    width: 100%; max-width: 850px; background: rgba(25, 25, 25, 0.95);
                     border: 2px solid #da9e47; border-radius: 16px; padding: 35px;
                     box-shadow: 0 20px 50px rgba(0,0,0,0.8); text-align: center;
                     position: relative; 
@@ -768,7 +805,7 @@ monogatari.script ({
                 .gallery-title { color: #da9e47; font-size: 1.8rem; letter-spacing: 3px; margin-bottom: 5px; font-weight: bold; }
                 .gallery-subtitle { color: #aaa; font-size: 0.9rem; margin-bottom: 30px; }
                 
-                /* 🎴 四大瓷器 Icon 佈局 */
+                /* 🎴 四大瓷器 Icon 佈局 (電腦端完美維持原樣) */
                 .gallery-grid {
                     display: flex; justify-content: space-between; gap: 20px; margin-bottom: 30px;
                 }
@@ -777,6 +814,7 @@ monogatari.script ({
                     border-radius: 12px; padding: 20px 15px; cursor: pointer;
                     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
                     position: relative; overflow: hidden;
+                    min-width: 0; /* 防止 Flex 子項目強行撐開橫排 */
                 }
                 .gallery-card:hover {
                     border-color: #da9e47; background: rgba(218, 158, 71, 0.08);
@@ -805,10 +843,10 @@ monogatari.script ({
                 }
                 .porcelain-name { color: #fff; font-size: 1.1rem; font-weight: bold; }
                 
-                /* 🔍 ✨【全面升級：左右分流 100% 全螢幕大圖劇院級圖層】 */
+                /* 🔍 ✨【左右分流 100% 全螢幕大圖劇院級圖層 (電腦端維持原樣)】 */
                 #large-preview-wrap {
                     position: fixed; /* 改為定點鋪滿整個螢幕 */
-                    top: 0; left: 0; width: 100vw; height: 100vh;
+                    top: 0; left: 0; right: 0; bottom: 0;
                     background: rgba(10, 10, 10, 0.98);
                     display: flex; flex-direction: row; justify-content: center; align-items: center;
                     gap: 50px; padding: 40px 60px; box-sizing: border-box;
@@ -890,6 +928,65 @@ monogatari.script ({
                 }
                 .gallery-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(218,158,71,0.4); }
                 .gallery-btn:disabled { background: #444; color: #888; cursor: not-allowed; box-shadow: none; }
+
+
+                /* ======================================================= */
+                /* 📱【窄螢幕行動端專屬 RWD 補強規則，完全防止畫面硬擠】 */
+                /* ======================================================= */
+                @media (max-width: 768px) {
+                    #gallery-overlay { padding: 10px; }
+                    .gallery-box {
+                        padding: 20px 15px;
+                        max-height: 95vh; overflow-y: auto; /* 預防矮螢幕手機導致內容溢出 */
+                    }
+                    .gallery-title { font-size: 1.4rem; letter-spacing: 1px; }
+                    .gallery-subtitle { margin-bottom: 20px; }
+
+                    /* 💡 解法：4張卡片不再擠在一橫排，自動轉為 2x2 雙列佈局，保護元件比例 */
+                    .gallery-grid {
+                        flex-wrap: wrap;
+                        justify-content: center;
+                        gap: 12px;
+                        margin-bottom: 20px;
+                    }
+                    .gallery-card {
+                        flex: 0 1 calc(50% - 6px); /* 精準分配雙列寬度 */
+                        min-width: 120px;
+                        padding: 15px 10px;
+                    }
+                    .porcelain-icon {
+                        width: 80px; height: 80px; margin-bottom: 8px; /* 行動端稍微縮小圖標 */
+                    }
+                    .porcelain-name { font-size: 0.95rem; }
+
+                    /* 💡 解法：劇院大圖層由「左右並排」改為「上下疊加」，徹底解放橫向寬度 */
+                    #large-preview-wrap {
+                        flex-direction: column;
+                        gap: 15px;
+                        padding: 20px 15px;
+                    }
+                    .preview-img-container {
+                        flex: 1; width: 100%; height: auto;
+                        max-height: 40vh; /* 固定大圖最高佔用 40% 的行動端螢幕高度 */
+                    }
+                    #large-preview-img {
+                        max-height: 100%;
+                    }
+                    .preview-text-panel {
+                        flex: 1.2; width: 100%; max-width: 100%;
+                        height: auto; max-height: 45vh; /* 固定面板最高佔用 45% 的行動端螢幕高度 */
+                        padding: 35px 15px 15px;
+                    }
+                    .floating-speaker { font-size: 1.1rem; margin-bottom: 6px; }
+                    .floating-content { font-size: 0.95rem; letter-spacing: 1px; }
+                    .close-hint { top: 12px; right: 15px; }
+                }
+
+                /* 針對小於 360px 極窄手機螢幕的極致防爆 */
+                @media (max-width: 360px) {
+                    .gallery-grid { gap: 10px; }
+                    .gallery-card { flex: 0 1 100%; } /* 直排一條龍，絕對不擠壓 */
+                }
             `;
             document.head.appendChild(style);
         }
@@ -1075,23 +1172,30 @@ monogatari.script ({
     // 🎮 互動小遊戲：博古架瓷器分類（拖曳、限時、網頁合成音效版）
     // =========================================================================
     function () {
-        // 1. 動態注入小遊戲專屬的精美 CSS 樣式
+        // 1. 動態注入小遊戲專屬的精美 CSS 樣式（完美自適應補強，防擠壓爆版，新增點選高亮）
         if (!document.getElementById('bogu-game-style')) {
             const style = document.createElement('style');
             style.id = 'bogu-game-style';
             style.innerHTML = `
+                /* 🛡️ 核心防護：確保所有 Padding 與邊框不撐擠版面 */
+                #game-overlay *, #game-overlay *::before, #game-overlay *::after {
+                    box-sizing: border-box;
+                }
+
                 #game-overlay {
-                    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+                    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
                     background: rgba(12, 12, 12, 0.95); z-index: 9999;
                     display: flex; justify-content: center; align-items: center;
                     font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
                     user-select: none;
+                    padding: 15px;
                 }
                 .game-box {
-                    width: 950px; background: rgba(22, 22, 22, 0.98);
+                    width: 100%; max-width: 950px; background: rgba(22, 22, 22, 0.98);
                     border: 2px solid #da9e47; border-radius: 16px; padding: 30px;
                     box-shadow: 0 25px 60px rgba(0,0,0,0.8); text-align: center;
                     position: relative;
+                    max-height: 95vh; overflow-y: auto; /* 預防矮螢幕時內容被裁切 */
                 }
                 .game-title { color: #da9e47; font-size: 1.8rem; letter-spacing: 4px; font-weight: bold; margin-bottom: 5px; }
                 .game-subtitle { color: #aaa; font-size: 0.9rem; margin-bottom: 20px; }
@@ -1103,17 +1207,30 @@ monogatari.script ({
                     position: relative;
                 }
                 .pool-hint { position: absolute; color: #555; font-size: 0.9rem; letter-spacing: 1px; pointer-events: none; }
+                
+                /* 瓷器本體樣式 */
                 .draggable-porcelain {
                     background: rgba(35, 35, 35, 0.9); border: 2px solid #da9e47; border-radius: 12px;
                     padding: 10px 20px; display: flex; align-items: center; gap: 15px; cursor: grab;
                     box-shadow: 0 8px 20px rgba(0,0,0,0.5); z-index: 20;
-                    transition: transform 0.2s, box-shadow 0.2s;
+                    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
                 }
                 .draggable-porcelain:active { cursor: grabbing; transform: scale(0.98); }
+                
+                /* ✨ 新增：行動端點選激活狀態（亮起金邊與外發光） */
+                .draggable-porcelain.active-select {
+                    border-color: #fff;
+                    box-shadow: 0 0 20px rgba(218, 158, 71, 0.8);
+                    background: rgba(45, 45, 45, 0.95);
+                    transform: scale(1.02);
+                }
+
                 .draggable-porcelain img { width: 65px; height: 65px; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
                 .draggable-text { text-align: left; }
                 .draggable-text .p-type { color: #da9e47; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; }
                 .draggable-text .p-name { color: #fff; font-size: 1.05rem; font-weight: bold; margin-top: 2px; }
+                
+                /* 博古架外層容器 */
                 .shelves-container { display: flex; justify-content: space-between; gap: 20px; }
                 .bogu-shelf {
                     flex: 1; background: rgba(40, 30, 20, 0.2); 
@@ -1122,11 +1239,23 @@ monogatari.script ({
                     display: flex; flex-direction: column; align-items: center;
                     transition: all 0.25s ease; position: relative;
                     box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+                    min-width: 0;
                 }
                 .bogu-shelf.drag-over {
                     border-color: #da9e47; background: rgba(218, 158, 71, 0.1);
                     box-shadow: inset 0 0 30px rgba(218, 158, 71, 0.2), 0 0 15px rgba(218, 158, 71, 0.2);
                 }
+                
+                /* ✨ 新增：當瓷器被點選時，提示可點擊投放的博古架目標 */
+                .bogu-shelf.selectable-target {
+                    cursor: pointer;
+                    border-color: rgba(218, 158, 71, 0.6);
+                    box-shadow: inset 0 0 15px rgba(218, 158, 71, 0.1);
+                }
+                .bogu-shelf.selectable-target:hover {
+                    background: rgba(218, 158, 71, 0.05);
+                }
+
                 .shelf-title {
                     background: #5a4028; color: #f1e5d5; font-weight: bold;
                     padding: 6px 20px; border-radius: 20px; font-size: 1.05rem;
@@ -1147,6 +1276,35 @@ monogatari.script ({
                     40%, 80% { transform: translateX(8px); }
                 }
                 @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+                /* ======================================================= */
+                /* 📱【窄螢幕行動端專屬 RWD 響應規則，完美防止博古架被硬擠】 */
+                /* ======================================================= */
+                @media (max-width: 768px) {
+                    .game-box { padding: 20px 15px; }
+                    .game-title { font-size: 1.4rem; letter-spacing: 2px; }
+                    .game-subtitle { font-size: 0.85rem; margin-bottom: 15px; }
+                    .timer-container { margin-bottom: 15px; }
+                    
+                    .item-pool-zone { height: 120px; margin-bottom: 20px; }
+                    .draggable-porcelain { padding: 8px 15px; gap: 12px; cursor: pointer; } /* 手機端游標改為 pointer 提示點擊 */
+                    .draggable-porcelain img { width: 50px; height: 50px; }
+                    .draggable-text .p-name { font-size: 0.95rem; }
+
+                    .shelves-container {
+                        flex-direction: column;
+                        gap: 15px;
+                    }
+                    .bogu-shelf {
+                        min-height: 120px;
+                        padding: 15px 10px;
+                    }
+                    .shelf-title {
+                        font-size: 0.95rem; padding: 4px 15px; margin-bottom: 10px;
+                    }
+                    .shelf-content { gap: 6px; }
+                    .placed-tag { font-size: 0.85rem; padding: 5px 10px; width: 90%; }
+                }
             `;
             document.head.appendChild(style);
         }
@@ -1160,7 +1318,7 @@ monogatari.script ({
         gameOverlay.innerHTML = `
             <div class="game-box" id="game-main-box">
                 <div class="game-title">🪵 御器考驗・博古歸位 🪵</div>
-                <div class="game-subtitle">請按分類將上方落下的瓷器「拖曳」至正確的博古架格子中</div>
+                <div class="game-subtitle">請按分類將瓷器「拖曳」或「點選瓷器再點格子」至正確的博古架中</div>
                 <div class="timer-container">
                     <div id="game-timer-bar" class="timer-bar"></div>
                 </div>
@@ -1228,10 +1386,21 @@ monogatari.script ({
         const totalTime = 25;
         let timeLeft = totalTime;
 
+        // 🌟 新增：點擊選取狀態變數
+        let clickSelectedArmed = false;
+
         const mainBox = document.getElementById('game-main-box');
         const itemPool = document.getElementById('item-pool');
         const timerBar = document.getElementById('game-timer-bar');
         const shelves = document.querySelectorAll('.bogu-shelf');
+
+        // 清除點選狀態的輔助函數
+        const clearClickSelection = () => {
+            clickSelectedArmed = false;
+            const activePorcelain = document.getElementById('active-porcelain');
+            if (activePorcelain) activePorcelain.classList.remove('active-select');
+            shelves.forEach(s => s.classList.remove('selectable-target'));
+        };
 
         const initGame = () => {
             document.getElementById('shelf-underglaze').innerHTML = '';
@@ -1241,6 +1410,8 @@ monogatari.script ({
             timeLeft = totalTime;
             timerBar.style.width = '100%';
             
+            clearClickSelection();
+
             clearInterval(gameTimer);
             gameTimer = setInterval(() => {
                 timeLeft -= 0.1;
@@ -1258,6 +1429,8 @@ monogatari.script ({
         const spawnNextItem = () => {
             const oldItem = document.getElementById('active-porcelain');
             if (oldItem) oldItem.remove();
+
+            clearClickSelection();
 
             if (itemQueue.length === 0) {
                 clearInterval(gameTimer);
@@ -1287,6 +1460,7 @@ monogatari.script ({
                 </div>
             `;
 
+            // ================= 桌機端拖拽事件 =================
             pElem.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('text/plain', currentItem.category);
                 pElem.style.opacity = '0.5';
@@ -1296,11 +1470,26 @@ monogatari.script ({
                 pElem.style.opacity = '1';
             });
 
+            // ================= 📱 新增：行動端點選選取事件 =================
+            pElem.addEventListener('click', (e) => {
+                e.stopPropagation(); // 防止點擊泡泡擴散
+                clickSelectedArmed = !clickSelectedArmed;
+                
+                if (clickSelectedArmed) {
+                    pElem.classList.add('active-select');
+                    shelves.forEach(s => s.classList.add('selectable-target'));
+                } else {
+                    pElem.classList.remove('active-select');
+                    shelves.forEach(s => s.classList.remove('selectable-target'));
+                }
+            });
+
             itemPool.appendChild(pElem);
         };
 
         const triggerFailure = (msg) => {
             clearInterval(gameTimer);
+            clearClickSelection();
             playSynthSound('shatter');
             mainBox.classList.add('shake-anim');
             setTimeout(() => mainBox.classList.remove('shake-anim'), 400);
@@ -1308,14 +1497,18 @@ monogatari.script ({
             initGame();
         };
 
+        // 博古架事件綁定（同時兼顧拖拽放落與點擊判定）
         shelves.forEach(shelf => {
+            // 1. 拖拽滑入
             shelf.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 shelf.classList.add('drag-over');
             });
+            // 2. 拖拽滑出
             shelf.addEventListener('dragleave', () => {
                 shelf.classList.remove('drag-over');
             });
+            // 3. 拖拽放開判定
             shelf.addEventListener('drop', (e) => {
                 e.preventDefault();
                 shelf.classList.remove('drag-over');
@@ -1335,11 +1528,33 @@ monogatari.script ({
                     triggerFailure(`放錯了！「${currentItem.name}」不屬於【${shelf.querySelector('.shelf-title').innerText}】！`);
                 }
             });
+
+            // 4. 📱 新增：行動端點擊分類判定
+            shelf.addEventListener('click', () => {
+                // 如果目前沒有點選任何瓷器，則不響應點擊
+                if (!clickSelectedArmed) return;
+
+                const targetCategory = shelf.getAttribute('data-category');
+
+                // 分流判定邏輯（與 Drop 核心機制相同）
+                if (currentItem.category === targetCategory) {
+                    playSynthSound('ding');
+                    const contentZone = shelf.querySelector('.shelf-content');
+                    const tag = document.createElement('div');
+                    tag.className = 'placed-tag';
+                    tag.innerText = currentItem.name;
+                    contentZone.appendChild(tag);
+                    spawnNextItem(); // 成功時內部會自動清除點選樣式
+                } else {
+                    itemQueue.unshift(currentItem);
+                    triggerFailure(`放錯了！「${currentItem.name}」不屬於【${shelf.querySelector('.shelf-title').innerText}】！`);
+                }
+            });
         });
 
         initGame();
         return false; 
-    }, // ✨【修正 3】加上此處的逗號，用來隔開小遊戲 Function 與下一個結算 Function
+}, // ✨【修正 3】加上此處的逗號，用來隔開小遊戲 Function 與下一個結算 Function
 
         'y 呼……我緊張的手心直冒汗！',
         'show character w normal at wang-giant-left',
@@ -1377,28 +1592,34 @@ monogatari.script ({
         '於是，你和薩利姆一起在碼頭的貨倉裡，欣賞了幾件大明外銷的珍品：',
 
         function () {
-        // 1. 動態注入名瓷鑑賞專屬的精美 CSS 樣式
+        // 1. 動態注入名瓷鑑賞專屬的精美 CSS 樣式（精準 RWD 補強，絕不擠壓）
         if (!document.getElementById('porcelain-gallery-style')) {
             const style = document.createElement('style');
             style.id = 'porcelain-gallery-style';
             style.innerHTML = `
+                /* 🛡️ 核心防護：確保 Padding 與邊框不撐擠版面 */
+                #gallery-overlay *, #gallery-overlay *::before, #gallery-overlay *::after {
+                    box-sizing: border-box;
+                }
+
                 #gallery-overlay {
-                    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+                    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
                     background: rgba(10, 10, 10, 0.9); z-index: 9999;
                     display: flex; justify-content: center; align-items: center;
                     font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+                    padding: 15px;
                 }
                 .gallery-box {
-                    width: 850px; background: rgba(25, 25, 25, 0.95);
+                    width: 100%; max-width: 850px; background: rgba(25, 25, 25, 0.95);
                     border: 2px solid #da9e47; border-radius: 16px; padding: 35px;
                     box-shadow: 0 20px 50px rgba(0,0,0,0.8); text-align: center;
                     position: relative;
-                    overflow: hidden;   /* 確保滿版層展開時不會超出外框的圓角 */
+                    max-height: 95vh; overflow-y: auto; /* 預防矮螢幕時內容被裁切 */
                 }
                 .gallery-title { color: #da9e47; font-size: 1.8rem; letter-spacing: 3px; margin-bottom: 5px; font-weight: bold; }
                 .gallery-subtitle { color: #aaa; font-size: 0.9rem; margin-bottom: 30px; }
                 
-                /* 🎴 四大瓷器 Icon 佈局 */
+                /* 🎴 四大瓷器 Icon 佈局 (電腦端維持原樣) */
                 .gallery-grid {
                     display: flex; justify-content: space-between; gap: 20px; margin-bottom: 30px;
                 }
@@ -1407,6 +1628,7 @@ monogatari.script ({
                     border-radius: 12px; padding: 20px 15px; cursor: pointer;
                     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
                     position: relative; overflow: hidden;
+                    min-width: 0; /* 防止 Flex 項目強行撐開 */
                 }
                 .gallery-card:hover {
                     border-color: #da9e47; background: rgba(218, 158, 71, 0.08);
@@ -1437,16 +1659,16 @@ monogatari.script ({
                 }
                 .porcelain-name { color: #fff; font-size: 1.1rem; font-weight: bold; }
                 
-                /* 🔍 ✨【全面升級：左右分流 100% 全螢幕大圖劇院級圖層】 */
+                /* 🔍 ✨【左右分流 100% 全螢幕大圖劇院級圖層 (電腦端)】 */
                 #large-preview-wrap {
-                    position: fixed; /* 改為定點鋪滿整個螢幕 */
-                    top: 0; left: 0; width: 100vw; height: 100vh;
+                    position: fixed;
+                    top: 0; left: 0; right: 0; bottom: 0;
                     background: rgba(10, 10, 10, 0.98);
                     display: flex; flex-direction: row; justify-content: center; align-items: center;
                     gap: 50px; padding: 40px 60px; box-sizing: border-box;
                     transform: scale(0.95); opacity: 0; pointer-events: none;
                     transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-                    z-index: 10000; /* 高於原本的外框層 */
+                    z-index: 10000;
                 }
                 /* 啟用放大時的狀態 */
                 #large-preview-wrap.visible {
@@ -1457,7 +1679,7 @@ monogatari.script ({
                 .preview-img-container {
                     flex: 1.3; height: 100%; display: flex; justify-content: center; align-items: center;
                 }
-                /* 滿版大圖：徹底騰出寬度，極致放大 */
+                /* 滿版大圖 */
                 #large-preview-img {
                     max-height: 85vh; max-width: 100%; object-fit: contain;
                     filter: drop-shadow(0 20px 45px rgba(0,0,0,0.95));
@@ -1475,7 +1697,7 @@ monogatari.script ({
                     border-top: 1px solid rgba(255,255,255,0.08);
                     border-right: 1px solid rgba(255,255,255,0.08);
                     border-bottom: 1px solid rgba(255,255,255,0.08);
-                    border-radius: 12px; padding: 40px 25px 25px; /* 微調上方留白給關閉提示 */
+                    border-radius: 12px; padding: 40px 25px 25px;
                     text-align: left; box-shadow: 0 15px 35px rgba(0,0,0,0.6);
                     backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
                     display: flex; flex-direction: column; position: relative; box-sizing: border-box;
@@ -1498,7 +1720,7 @@ monogatari.script ({
                     position: absolute; top: 15px; right: 20px;
                     font-size: 0.8rem; color: #da9e47; letter-spacing: 1px;
                     opacity: 0.8; animation: pulse-hint 1.5s infinite;
-                    cursor: pointer; z-index: 11; /* 確保在面板最上層可被點擊 */
+                    cursor: pointer; z-index: 11;
                 }
                 @keyframes pulse-hint {
                     0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; }
@@ -1523,6 +1745,63 @@ monogatari.script ({
                 }
                 .gallery-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(218,158,71,0.4); }
                 .gallery-btn:disabled { background: #444; color: #888; cursor: not-allowed; box-shadow: none; }
+
+
+                /* ======================================================= */
+                /* 📱【關鍵修正：手持行動裝置 RWD 獨立響應規則，完美防擠壓】 */
+                /* ======================================================= */
+                @media (max-width: 768px) {
+                    .gallery-box {
+                        padding: 20px 15px; /* 縮減外框留白，擴大可用面積 */
+                    }
+                    .gallery-title { font-size: 1.4rem; letter-spacing: 1px; }
+                    .gallery-subtitle { margin-bottom: 20px; }
+
+                    /* 💡 解法：卡片不硬擠橫排，自動切換成 2x2 雙列網格，保持大氣尺寸 */
+                    .gallery-grid {
+                        flex-wrap: wrap;
+                        justify-content: center;
+                        gap: 15px;
+                        margin-bottom: 20px;
+                    }
+                    .gallery-card {
+                        flex: 0 1 calc(50% - 8px); /* 精確計算雙列寬度 */
+                        min-width: 130px;
+                        padding: 15px 10px;
+                    }
+                    .porcelain-icon {
+                        width: 75px; height: 75px; margin-bottom: 8px; /* 等比例微調 Icon 尺寸 */
+                    }
+                    .porcelain-name { font-size: 0.95rem; }
+
+                    /* 💡 解法：大圖劇院層由「左右並排」改為「上下疊加」，解放寬度 */
+                    #large-preview-wrap {
+                        flex-direction: column;
+                        gap: 15px;
+                        padding: 20px 15px;
+                    }
+                    .preview-img-container {
+                        flex: 1; width: 100%; height: auto;
+                        max-height: 40vh; /* 固定大圖最高佔用 40% 螢幕高度 */
+                    }
+                    #large-preview-img {
+                        max-height: 100%;
+                    }
+                    .preview-text-panel {
+                        flex: 1.2; width: 100%; max-width: 100%;
+                        height: auto; max-height: 45vh; /* 固定文字面板最高佔用 45% 螢幕高度，其餘自由捲動 */
+                        padding: 35px 15px 15px;
+                    }
+                    .floating-speaker { font-size: 1.1rem; margin-bottom: 6px; }
+                    .floating-content { font-size: 0.95rem; letter-spacing: 1px; }
+                    .close-hint { top: 12px; right: 15px; }
+                }
+
+                /* 針對極窄手機螢幕 (如舊款 iPhone SE) 的極致防壓防爆 */
+                @media (max-width: 360px) {
+                    .gallery-grid { gap: 10px; }
+                    .gallery-card { flex: 0 1 100%; } /* 直排一條龍，絕對不擠壓 */
+                }
             `;
             document.head.appendChild(style);
         }
@@ -1584,9 +1863,9 @@ monogatari.script ({
 
         // 3. 設定主角對四個瓷器的台詞文本
         const porcelainIntros = [
-            "「典型的外銷瓷，也是鼎鼎大名的克拉克瓷中的一員。克拉克瓷作為遠銷海外的瓷期，多數都是以人物、動物等為主要素材，此件瓷器上所包含的中國花鳥畫不僅是東方的自然美學，同時也蘊含著美好寓意，如畫中鷺鷥與蓮花的組合，代表一路連科，表達對仕途的祈願。此外，開光作為瓷器上劃定裝飾區域的手法，此件器物上則是使用期最為獨特的八角開光，將盤的內壁和外壁以單線或連辮形分隔出八個裝飾區域，而在其內部繪有對稱的花卉、幾何紋飾，從而使布局繁密有序。這種裝飾風格不僅表示歐洲的審美，同時也有別於中國官窯本身嚴謹的風格，更顯自然活潑。」",
+            "「典型的外銷瓷，也是鼎鼎大名的克拉克瓷中的一員。克拉克瓷作為遠銷海外的瓷期，多數都是以人物、動物等為主要素材，此件瓷器上所包含的中國花鳥畫不僅是東方的自然美學，同時也蘊含著美好寓意，如畫中鷺鷥與蓮花的組合，代表一路連科，表達對仕途的祈願。此外，開光作為瓷器上劃定裝飾區域的手法，此件器物上則是使用期最為獨特的八角開光，將盤的內壁和外壁以單線或連辮形分隔出八個裝飾區域，而在其內部繪有對稱的花卉、幾何紋飾，從而使布局繁密有序。這種裝飾風格不僅表示歐洲的審美，同時也編織出有別於中國官窯本身嚴謹的風格，更顯自然活潑。」",
             "「這件花瓶的把手由纏繞的蛇形構成，瓶蓋上裝有兩層插花嘴，它屬於一組精美的臺夫特陶器（Delftware），這些瓷器都帶有底座，製作於1690年代。臺夫特陶器（Delftware）盛行於 1630 年之後到十八世紀中葉，在荷蘭生產製造，以中國瓷器，以及歐洲裝飾花紋為設計靈感，是東西共融的絕妙表現。」",
-            "「明代永樂時期，與中亞、西亞地區交流頻繁，在外來文化的影響下，部分青花瓷器以伊斯蘭地區金屬器作為模仿的對象，燒製出前所未有的形制。水壺是伊斯蘭教寺院備用的器物，每當舉行朝拜儀式時，每個穆斯林都要用水壺來沐浴淨身。」",
+            "「明代永樂時期，與中亞、西亞地區交流頻繁，在外來文化的影響下，部分青花瓷器以伊斯蘭地區金屬器作為模仿的對象，燒製出前所未有的形制。水壺是伊斯蘭教寺院備用的器物，每當舉行朝拜儀式時，每個穆斯幕都要用水壺來沐浴淨身。」",
             "「全器仿木製提梁桶，帶蓋，竹節鈕。筒形器身中段以凸弦紋分作兩段，上段繪雲鶴紋、下段蝦蟹魚藻紋。提樑罐日文稱為「水指」，是容裝清水，作為調整沸水溫度，以及洗滌茶碗、茶筅之用。 提樑造型水罐在十六世紀中頗為盛行，當時多以木桶或漆器為之，千利休也曾向工匠訂製木桶型漆器水罐。這類青花水罐是明末天啟崇禎年間，日本茶人向中國景德鎮訂製，在中國罕見此造型。器沿及提梁多處剝釉，然而日本茶人覺得此種斑駁缺陷，最能體現日本茶道的麁相美感，稱其為「蟲蛀」，尤受茶人珍愛。 」"
         ];
 
@@ -1704,22 +1983,29 @@ monogatari.script ({
         's 再給你最後的考驗吧！',
 
         function () {
-        // 1. 動態注入絲路訂單解密小遊戲專屬的 CSS 樣式
+        // 1. 動態注入絲路訂單解密小遊戲專屬的 CSS 樣式（全面自適應補強與滿版符號優化）
         if (!document.getElementById('silkroad-game-style')) {
             const style = document.createElement('style');
             style.id = 'silkroad-game-style';
             style.innerHTML = `
+                /* 🛡️ 核心防護：確保 Padding 與邊框計算不會撐擠爆版面 */
+                #silkroad-overlay *, #silkroad-overlay *::before, #silkroad-overlay *::after {
+                    box-sizing: border-box;
+                }
+
                 #silkroad-overlay {
-                    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+                    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
                     background: rgba(15, 20, 25, 0.95); z-index: 9999;
                     display: flex; justify-content: center; align-items: center;
                     font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+                    padding: 15px;
                 }
                 .silk-box {
-                    width: 950px; height: 620px; background: rgba(28, 33, 41, 0.98);
+                    width: 100%; max-width: 950px; background: rgba(28, 33, 41, 0.98);
                     border: 2px solid #b89254; border-radius: 16px; padding: 30px;
                     box-shadow: 0 25px 60px rgba(0,0,0,0.8);
-                    display: flex; flex-direction: column; relative; overflow: hidden;
+                    display: flex; flex-direction: column; position: relative;
+                    max-height: 95vh; overflow-y: auto; /* 預防矮螢幕時內容被裁切 */
                 }
                 .silk-header { text-align: center; margin-bottom: 20px; }
                 .silk-title { color: #b89254; font-size: 1.8rem; letter-spacing: 3px; font-weight: bold; margin: 0; }
@@ -1730,16 +2016,15 @@ monogatari.script ({
                 
                 /* ================= 左側：瓷器畫布與核心區域 ================= */
                 .porcelain-container {
-                    flex: 1.2; display: flex; justify-content: center; align-items: center; position: relative; height: 100%;
+                    flex: 1.2; display: flex; justify-content: center; align-items: center; position: relative; padding: 10px;
                 }
-                /* 大盤本體（同時作為「盤邊放落區」） */
+                /* 大盤本體 */
                 .plate-rim-zone {
                     width: 360px; height: 360px; border-radius: 50%;
                     background: #fdfdfa; border: 8px double #ccc;
                     box-shadow: 0 15px 35px rgba(0,0,0,0.5);
                     display: flex; justify-content: center; align-items: center;
                     position: relative; transition: all 0.4s ease; cursor: pointer;
-                    box-sizing: border-box;
                 }
                 /* 盤心放落區 */
                 .plate-center-zone {
@@ -1747,7 +2032,7 @@ monogatari.script ({
                     background: #f7f7f2; border: 2px dashed #999;
                     display: flex; justify-content: center; align-items: center;
                     transition: all 0.3s ease; text-align: center; font-size: 0.9rem; color: #888;
-                    box-sizing: border-box; z-index: 2;
+                    z-index: 2; position: relative; overflow: hidden;
                 }
                 
                 /* 放落區 Hover 與啟動狀態提示 */
@@ -1755,17 +2040,34 @@ monogatari.script ({
                 .plate-center-zone.drag-hover { border-color: #b89254; background: #fffdf3; color: #b89254; }
                 .selected-target { box-shadow: 0 0 20px rgba(218, 146, 84, 0.6); border-color: #da9254 !important; }
 
-                /* 紋飾渲染樣式（成功填入後顯示） */
+                /* 🌟 紋飾純符號滿版渲染樣式（替代原本的文字備註） */
                 .filled-pattern {
-                    position: absolute; width: 100%; height: 100%; border-radius: 50%;
-                    display: flex; justify-content: center; align-items: center;
-                    font-weight: bold; font-size: 1.1rem; pointer-events: none;
+                    position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%;
+                    display: flex; justify-content: center; align-items: center; pointer-events: none;
                 }
-                .rim-style { color: #104b75; border: 12px solid rgba(16, 75, 117, 0.15); box-sizing: border-box; }
-                .center-style { color: #9c27b0; font-size: 1.3rem; }
+                
+                /* 盤心純符號覆蓋 */
+                .center-style { 
+                    font-size: 4.5rem; 
+                    background: rgba(253, 253, 250, 0.9);
+                    z-index: 5;
+                    animation: zoomIn 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+                }
+
+                /* 盤邊專屬工藝紋飾彩圈覆蓋 */
+                .rim-style { z-index: 1; box-sizing: border-box; }
+                .rim-symbol-bg { font-size: 10rem; opacity: 0.12; position: absolute; z-index: 0; }
+                
+                /* 根據不同的符號注入專屬的瓷器外圍花框工藝，徹底取代文字 */
+                .rim-style-lotus { border: 25px double #104b75; background: rgba(16, 75, 117, 0.02); }
+                .rim-style-geometric { border: 25px dashed #1c7cd6; background: rgba(28, 124, 214, 0.02); }
+                .rim-style-shield { border: 25px solid #e8590c; background: rgba(232, 89, 12, 0.02); }
+                .rim-style-fret { border: 25px double #0b7285; background: rgba(11, 114, 133, 0.02); }
+
+                @keyframes zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
                 /* ================= 右側：訂單密碼與紋飾庫 ================= */
-                .side-panel { flex: 0.8; display: flex; flex-direction: column; gap: 20px; height: 100%; }
+                .side-panel { flex: 0.8; display: flex; flex-direction: column; gap: 20px; }
                 
                 /* 顧客訂單提示框 */
                 .order-card {
@@ -1790,15 +2092,16 @@ monogatari.script ({
                 /* ================= 遊戲回饋與特效系統 ================= */
                 .feedback-banner {
                     min-height: 45px; display: flex; justify-content: center; align-items: center;
-                    font-size: 1.1rem; font-weight: bold; border-radius: 6px; margin-top: 15px;
+                    font-size: 1.1rem; font-weight: bold; border-radius: 6px; margin-top: 15px; padding: 5px 10px;
+                    text-align: center;
                 }
                 .status-idle { color: #8a96a3; }
-                .status-success { color: #4caf50; background: rgba(76, 175, 80, 0.1); width: 100%; animation: pulse 1s infinite; }
-                .status-fail { color: #f44336; background: rgba(244, 67, 54, 0.1); width: 100%; animation: shake 0.4s ease-in-out; }
+                .status-success { color: #4caf50; background: rgba(76, 175, 80, 0.1); width: 100%; }
+                .status-fail { color: #f44336; background: rgba(244, 67, 54, 0.1); width: 100%; }
 
-                /* 底部控鈕 */
-                .silk-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-                .clear-btn { background: none; border: 1px solid #5f6e82; color: #a2b2c8; padding: 6px 15px; border-radius: 4px; cursor: pointer; }
+                /* 底部按鈕 */
+                .silk-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+                .clear-btn { background: none; border: 1px solid #5f6e82; color: #a2b2c8; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
                 .clear-btn:hover { color: #fff; border-color: #fff; }
                 .submit-btn {
                     background: linear-gradient(135deg, #b89254, #8e6d37); border: none;
@@ -1806,7 +2109,7 @@ monogatari.script ({
                     border-radius: 20px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: all 0.2s;
                 }
                 .submit-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 15px rgba(184,146,84,0.4); }
-                .submit-btn:disabled { background: #444; color: #888; cursor: not-allowed; box-shadow: none; }
+                .submit-btn:disabled { background: #444; color: #888; cursor: not-allowed; box-shadow: none; linear-gradient: none; }
 
                 /* ✨ 成功時大盤旋轉發光特效 */
                 @keyframes rotateGlow {
@@ -1814,13 +2117,41 @@ monogatari.script ({
                     50% { box-shadow: 0 0 50px #ffdfa9, 0 0 20px #b89254; }
                     100% { transform: rotate(360deg); box-shadow: 0 0 20px #b89254; }
                 }
-                .success-animate { animation: rotateGlow 3s linear infinite; border-color: #b89254 !important; }
+                .success-animate { animation: rotateGlow 4s linear infinite; border-color: #b89254 !important; }
 
-                /* ❌ 失敗震動特效 */
-                @keyframes shake {
-                    0%, 100% { transform: translateX(0); }
-                    20%, 60% { transform: translateX(-8px); }
-                    40%, 80% { transform: translateX(8px); }
+
+                /* ======================================================= */
+                /* 📱【窄螢幕行動端專屬 RWD 響應規則，完全阻斷排版擠壓】 */
+                /* ======================================================= */
+                @media (max-width: 768px) {
+                    .silk-box { padding: 20px 15px; }
+                    .silk-title { font-size: 1.4rem; }
+                    .silk-subtitle { font-size: 0.8rem; }
+                    
+                    /* 💡 解法：左右並排改為上下垂直堆疊，釋放橫向寬度 */
+                    .silk-main { flex-direction: column; gap: 20px; }
+                    .porcelain-container { flex: none; width: 100%; height: auto; }
+                    
+                    /* 安全縮放行動端的瓷盤比例，防止扣除手機寬度後溢出 */
+                    .plate-rim-zone { width: 280px; height: 280px; border-width: 6px; }
+                    .plate-center-zone { width: 130px; height: 130px; font-size: 0.8rem; }
+                    
+                    /* 同步等比縮減覆蓋符號與特製花邊的寬度 */
+                    .center-style { font-size: 3.2rem; }
+                    .rim-symbol-bg { font-size: 7.5rem; }
+                    .rim-style-lotus { border-width: 18px; }
+                    .rim-style-geometric { border-width: 18px; }
+                    .rim-style-shield { border-width: 18px; }
+                    .rim-style-fret { border-width: 18px; }
+
+                    .side-panel { flex: none; width: 100%; }
+                    .order-card { padding: 12px; }
+                    .client-info { font-size: 1rem; }
+                    .client-demand { font-size: 0.85rem; }
+                    .pattern-grid { gap: 8px; }
+                    .pattern-item { padding: 12px 6px; font-size: 0.85rem; }
+                    .feedback-banner { font-size: 0.95rem; min-height: 40px; }
+                    .silk-footer { margin-top: 15px; }
                 }
             `;
             document.head.appendChild(style);
@@ -1840,7 +2171,7 @@ monogatari.script ({
                 <div class="silk-main">
                     <div class="porcelain-container">
                         <div id="plate-rim" class="plate-rim-zone" data-zone="rim">
-                            <div id="rim-text" style="position:absolute; bottom:20px; color:#aaa; font-size:0.8rem;">【盤邊放置區】</div>
+                            <div id="rim-text" style="position:absolute; bottom:20px; color:#aaa; font-size:0.8rem; pointer-events:none;">【盤邊放置區】</div>
                             
                             <div id="plate-center" class="plate-center-zone" data-zone="center">
                                 <span id="center-text">【盤心放置區】<br><span style="font-size:0.75rem;color:#aaa;">可拖曳或點選</span></span>
@@ -1883,7 +2214,7 @@ monogatari.script ({
         // 3. 核心邏輯與變數控制
         // 正確答案：rim = lotus, center = shield
         const currentSelection = { rim: null, center: null };
-        let selectedPatternId = null; // 用於點擊fallback機制
+        let selectedPatternId = null; // 用於點擊替代機制
 
         const rimZone = document.getElementById('plate-rim');
         const centerZone = document.getElementById('plate-center');
@@ -1892,22 +2223,23 @@ monogatari.script ({
         const submitBtn = document.getElementById('silk-submit-btn');
         const clearBtn = document.getElementById('silk-clear-btn');
 
-        // 紋飾對應名稱對照表
-        const patternNames = {
-            lotus: "🌸 大明纏枝蓮紋",
-            geometric: "🔷 波斯幾何紋",
-            shield: "🛡️ 葡萄牙皇家盾徽",
-            fret: "🌀 回文裝飾"
+        // 🌟 核心修正：將原本的文字對照表，改為純符號對照表
+        const patternSymbols = {
+            lotus: "🌸",
+            geometric: "🔷",
+            shield: "🛡️",
+            fret: "🌀"
         };
 
-        // 更新放落區視覺呈現
+        // 更新放落區視覺呈現（以純符號與特製彩圈完全覆蓋該區域）
         function updateZoneVisual(zone) {
             const pattern = currentSelection[zone];
             if (zone === 'center') {
                 const centerText = document.getElementById('center-text');
                 if (pattern) {
-                    centerText.innerHTML = `<div class="filled-pattern center-style">${patternNames[pattern]}</div>`;
-                    centerZone.style.borderColor = "#9c27b0";
+                    // 盤心：放入純符號並覆蓋
+                    centerText.innerHTML = `<div class="filled-pattern center-style">${patternSymbols[pattern]}</div>`;
+                    centerZone.style.borderColor = "#da9254";
                 } else {
                     centerText.innerHTML = `【盤心放置區】<br><span style="font-size:0.75rem;color:#aaa;">可拖曳或點選</span>`;
                     centerZone.style.borderColor = "#999";
@@ -1920,9 +2252,10 @@ monogatari.script ({
 
                 if (pattern) {
                     rimContainer.style.opacity = "0";
+                    // 盤邊：新建一個滿版圓形層，利用特殊 Border 鑄造成對應的工藝彩圈，內部打上大符號浮雕
                     const rimDiv = document.createElement('div');
-                    rimDiv.className = "filled-pattern rim-style";
-                    rimDiv.innerText = patternNames[pattern];
+                    rimDiv.className = `filled-pattern rim-style rim-style-${pattern}`;
+                    rimDiv.innerHTML = `<span class="rim-symbol-bg">${patternSymbols[pattern]}</span>`;
                     rimZone.appendChild(rimDiv);
                 } else {
                     rimContainer.style.opacity = "1";
@@ -1934,7 +2267,6 @@ monogatari.script ({
         patternItems.forEach(item => {
             item.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('text/plain', e.target.getAttribute('data-pattern'));
-                // 同時激活點擊選取樣式
                 patternItems.forEach(i => i.classList.remove('active-select'));
                 e.target.classList.add('active-select');
                 selectedPatternId = e.target.getAttribute('data-pattern');
@@ -1958,9 +2290,8 @@ monogatari.script ({
                 const pattern = e.dataTransfer.getData('text/plain') || selectedPatternId;
                 
                 if (pattern) {
-                    // 如果是丟進盤心，阻止事件冒泡傳給盤邊
                     if (zoneName === 'center') {
-                        e.stopPropagation();
+                        e.stopPropagation(); // 阻止盤心事件冒泡給盤邊
                     }
                     currentSelection[zoneName] = pattern;
                     updateZoneVisual(zoneName);
@@ -1975,7 +2306,6 @@ monogatari.script ({
                 item.classList.add('active-select');
                 selectedPatternId = item.getAttribute('data-pattern');
                 
-                // 提示玩家點擊目的地
                 rimZone.classList.add('selected-target');
                 centerZone.classList.add('selected-target');
             });
@@ -2020,43 +2350,38 @@ monogatari.script ({
         });
 
         submitBtn.addEventListener('click', () => {
-            // 驗證是否填滿
             if (!currentSelection.rim || !currentSelection.center) {
                 feedback.className = "feedback-banner status-fail";
                 feedback.innerText = "⚠️ 瓷器尚有區域空白，請配齊紋飾後再行交付！";
                 return;
             }
 
-            // 判斷通關條件
             if (currentSelection.rim === 'lotus' && currentSelection.center === 'shield') {
-                // 🔶 成功特效
                 feedback.className = "feedback-banner status-success";
                 feedback.innerHTML = "🎉 外銷訂單完成！獲得金幣百兩 🪙";
                 rimZone.classList.add('success-animate');
                 submitBtn.innerText = "繼續劇情";
                 
-                // 改綁按鈕事件，推進 Monogatari
                 submitBtn.removeEventListener('click', arguments.callee); 
                 submitBtn.onclick = () => {
                     silkOverlay.style.transition = 'opacity 0.3s';
                     silkOverlay.style.opacity = '0';
                     setTimeout(() => {
                         silkOverlay.remove();
-                        monogatari.next(); // 推進小說主線
+                        monogatari.next(); 
                     }, 300);
                 };
             } else {
-                // 🔷 失敗回饋
                 feedback.className = "feedback-banner status-fail";
                 feedback.innerText = "❌ 客戶退單：紋飾搭配不符合海外訂單需求，請重新調配紋飾！";
-                // 震動視覺反饋
+                
                 const silkBox = document.querySelector('.silk-box');
                 silkBox.style.animation = 'none';
                 setTimeout(() => { silkBox.style.animation = 'shake 0.4s ease-in-out'; }, 10);
             }
         });
 
-        return false; // 暫停 Monogatari 主線，等待通關
+        return false; 
 },
 
         'y 呼……好險！手真酸啊，終於把都成功了！',

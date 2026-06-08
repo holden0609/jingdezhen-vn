@@ -20,7 +20,7 @@ monogatari.settings({
 	'Name': '大洋上的瓷風：明代瓷器藝術交流',
 
 	// The version of your game in semantic versioning (https://semver.org/).
-	'Version': '0.1.0',
+	'Version': '0.2.0',
 
 	// Initial Label *
 	'Label': 'Start',
@@ -168,7 +168,7 @@ monogatari.preferences ({
 	'Resolution': '800x600',
 
 	// Speed at which dialog text will appear
-	'TextSpeed': 20,
+	'TextSpeed': 35,
 
 	// Speed at which the Auto Play feature will show the next statement
 	// It is measured in seconds and starts counting after the text is

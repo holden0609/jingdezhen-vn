@@ -355,3 +355,29 @@ main-menu .custom-menu-btn:hover {
     transform: translateY(-3px) !important;
     box-shadow: 0 6px 15px rgba(184, 146, 84, 0.5) !important;
 }
+
+[data-screen="game"] img[data-image] {
+    display: block !important;
+    object-fit: contain !important; /* 確保圖片永遠維持正確比例不變形 */
+    border: 3px solid #da9e47;      /* 典雅的古風金邊 */
+    border-radius: 8px;             /* 微圓角 */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6); /* 質感陰影 */
+    transition: all 0.2s ease-in-out;        /* 讓縮放時更滑順 */
+}
+
+/* 💻 【電腦版 / 寬螢幕】 比例調整 */
+@media (min-width: 769px) {
+    [data-screen="game"] img[data-image] {
+        max-width: 60% !important;   /* 電腦版寬度上限 60%，左右留白比較好看 */
+        max-height: 55vh !important;  /* 高度限制在螢幕的 55% 以內，確保跟對話框有舒適距離 */
+    }
+}
+
+/* 📱 【手機版 / 直向螢幕】 比例調整 */
+@media (max-width: 768px) {
+    [data-screen="game"] img[data-image] {
+        max-width: 90% !important;   /* 手機版左右空間小，放寬到 90% 讓圖片細節更清楚 */
+        max-height: 40vh !important;  /* 關鍵：強制壓縮高度在 40% 以內，絕對不壓到下方的對話框 */
+        border-width: 2px !important; /* 手機畫素密度高，邊框稍微變細才不會顯得太粗糙 */
+    }
+}

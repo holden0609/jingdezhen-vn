@@ -168,7 +168,7 @@ monogatari.preferences ({
 	'Resolution': '800x600',
 
 	// Speed at which dialog text will appear
-	'TextSpeed': 35,
+	'TextSpeed': 30,
 
 	// Speed at which the Auto Play feature will show the next statement
 	// It is measured in seconds and starts counting after the text is

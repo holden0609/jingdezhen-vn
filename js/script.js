@@ -2481,8 +2481,19 @@ monogatari.script ({
         'jump Final_challenge'
     ],
         // 🎮 核心小遊戲代碼注入
-        'Final_challenge':[
+        // 🎮 核心小遊戲代碼注入
+    'Final_challenge': [
         function () {
+            // 🛑 核心技術：建立鍵盤封鎖函數，徹底攔截空白鍵與 Enter
+            const blockStoryKeys = function (e) {
+                if (e.code === 'Space' || e.code === 'Enter') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            };
+            // 在 window 全域階段搶先攔截按鍵事件
+            window.addEventListener('keydown', blockStoryKeys, true);
+
             const gameOverlay = document.createElement('div');
             gameOverlay.id = 'kiln-game-overlay';
             gameOverlay.innerHTML = `
@@ -2503,7 +2514,7 @@ monogatari.script ({
             let position = 0;
             let direction = 1;
             
-            // 💡 修正點 1：降低移動速度。數值越小越慢，1.2 ~ 1.5 是比較人性化的反應時間
+            // 💡 降低移動速度。數值越小越慢
             const speed = 1.2; 
 
             function animatePointer() {
@@ -2520,33 +2531,35 @@ monogatari.script ({
             btn.addEventListener('click', () => {
                 if (position >= 42 && position <= 58) {
                     // 🎉 成功判定
-                    // 💡 修正點 2：改用原生 HTML5 Audio 播放，確保 100% 能夠出聲
                     const soundSuccess = new Audio('assets/sounds/porcelain_success.mp3');
-                    soundSuccess.play().catch(e => console.log("音效播放失敗，請檢查路徑是否有該檔案:", e));
+                    soundSuccess.play().catch(e => console.log("音效播放失敗:", e));
 
                     gameOverlay.classList.add('game-success-flash'); 
                     btn.disabled = true;
-                    btn.innerText = "✨ 燒製成功！✨";
+                    btn.innerText = "✨燒製成功✨";
                     monogatari.storage({ kiln_result: 'perfect' });
 
                     setTimeout(() => {
                         gameOverlay.remove(); 
+                        // 🔓 【重要】解除鍵盤鎖定，恢復遊戲控制
+                        window.removeEventListener('keydown', blockStoryKeys, true);
                         monogatari.next(); 
                     }, 1500);
 
                 } else {
                     // 💥 失敗判定
-                    // 💡 修正點 2：失敗音效同樣改用原生 HTML5 Audio
                     const soundFail = new Audio('assets/sounds/porcelain_fail.mp3');
-                    soundFail.play().catch(e => console.log("音效播放失敗，請檢查路徑是否有該檔案:", e));
+                    soundFail.play().catch(e => console.log("音效播放失敗:", e));
 
                     gameOverlay.classList.add('game-fail-shake'); 
                     btn.disabled = true;
-                    btn.innerText = "💥 溫度失控！瓷器裂開了！💥";
+                    btn.innerText = "💥溫度失控瓷器裂開💥";
                     monogatari.storage({ kiln_result: 'failed' });
 
                     setTimeout(() => {
                         gameOverlay.remove();
+                        // 🔓 【重要】解除鍵盤鎖定，恢復遊戲控制
+                        window.removeEventListener('keydown', blockStoryKeys, true);
                         monogatari.next(); 
                     }, 1800);
                 }

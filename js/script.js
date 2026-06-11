@@ -64,7 +64,16 @@ monogatari.configuration ('credits', {
     },
     "回饋表單": {
         "請給我們五星好評!?": '<a href="https://forms.gle/iJ3XCsru5isrqeBa8" target="_blank" rel="noopener noreferrer" style="color: #da9e47; text-decoration: underline; font-weight: bold;">點此前往填答</a>', 
-        }
+        },
+    "導覽影片": {
+        "影片連結": '<a href="https://www.youtube.com/watch?v=hzLmsU1deSo" target="_blank" rel="noopener noreferrer" style="color: #da9e47; text-decoration: underline; font-weight: bold;">點此前往觀看</a>', 
+        },
+    "參考資料": {
+        "一": "鄒培姍，〈19 世紀上半葉的中國南洋陶瓷貿易─ 從院藏泰興號沉船出水青花瓷說起〉，《故宮文物月刊》第490期（台北：2024）" ,
+        "二": "王光堯，〈關於泰興號沉船與所載船貨的思考—海外考古調查札記（五）〉，《福建文博》第2期（福建：2022）" ,
+        "三": "彭曉雲，〈19 世紀上半葉中國陶瓷對外貿易發展及相關問題研究〉，《故宮博物院院刊》第2期（台北：2023）" ,
+        "四": "盧泰康，〈台灣考古出土十七至十九世紀貿易陶瓷的發現與研究〉，《貿易陶瓷研究》第34期（台北：2014）" ,
+        },  
 });
 
 // 定義遊戲變數儲存區
@@ -117,6 +126,9 @@ monogatari.assets ('images', {
     'gallery_010': 'use_002.webp',
     'gallery_011': 'use_003.webp',
     'gallery_012': 'use_004.webp',
+    'gallery_013': 'use_005.webp',
+    'gallery_014': 'use_006.webp',
+    'gallery_015': 'use_007.webp',
 });
 
 // Define the backgrounds for each scene.
@@ -256,6 +268,8 @@ monogatari.script ({
         '你的雙腳也感覺灌了鉛似得愈發沉重，似乎要被拖往什麼地方去...',
         'show character g happy',
         'g 這是一個充滿挑戰的旅程，但我相信你一定能夠成功的！',
+        'y 我完全不懂你在說些什麼啊！話說你怎麼突然變裝了！',
+        'g 神界的事情你不要多管閒事啦～',
         'g 祝福你能夠順利地回到這裡囉？',
         'jump Story_Start'],
 
@@ -823,6 +837,16 @@ monogatari.script ({
         '於是，你們一同走向了倉儲區',
         
         function () {
+        // 🛑 核心技術：建立鍵盤封鎖函數，徹底攔截空白鍵與 Enter
+        const blockStoryKeys = function (e) {
+            if (e.code === 'Space' || e.code === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        };
+        // 在 window 全域階段搶先攔截按鍵事件
+        window.addEventListener('keydown', blockStoryKeys, true);
+
         // 1. 動態注入名瓷鑑賞專專屬的精美 CSS 樣式
         if (!document.getElementById('porcelain-gallery-style')) {
             const style = document.createElement('style');
@@ -1153,6 +1177,8 @@ monogatari.script ({
             galleryOverlay.style.transition = 'opacity 0.3s';
             galleryOverlay.style.opacity = '0';
             setTimeout(() => {
+                // 🔓 【重要】玩家點擊前進時，解除鍵盤鎖定，恢復遊戲控制
+                window.removeEventListener('keydown', blockStoryKeys, true);
                 galleryOverlay.remove();
                 monogatari.next(); 
             }, 300);
@@ -1648,12 +1674,32 @@ monogatari.script ({
         's 第三種情況的發色特徵是：藍豔、晶瑩亮麗，仿佛鑲嵌於釉下的藍寶石，熠熠閃光，並呈現出明顯的紫羅蘭色',
         's 且注意看的話，你會發現凝聚處有明顯的濃黑色結晶斑塊或斑點，暈散情況嚴重',
         'y 確實！瓷器好有趣啊!',
-        'hide image gallery_012 with fadeOut',     
+        'hide image gallery_012 with fadeOut',
+        's 話說小兄弟，你可知道你大明第一個到歐洲的瓷器是什麼呢？',
+        'y 欸啊！這個我還真的不清楚呢！',
+        'show image gallery_013 with fadeIn',
+        's 就是這件！豐山瓶（Fonthill Vase），這是一件罕見的「實驗性」花瓶，圓盤上有浮雕裝飾，採用常見的單色青白釉。似乎是中國使節拜訪教宗的時候贈送的喔！',
+        'y 哇啊！果然瓶身非常的漂釀欸！',
+        'hide image gallery_013 with fadeOut',
+        's 嘿嘿，我們歐洲可是流行過青花瓷的風潮呢～',
+        'show image gallery_014 with fadeIn',
+        's 看這件，《Still Life of Fruit on a Pewter Plate and in a Wan-li Kraak Bowl》，是荷蘭畫家Jan Davidsz. de Heem 的代表性水果靜物作品之一！',
+        's 畫面以成熟水果為主角，包括葡萄、桃子、檸檬等豐饒食材，被精心安排於錫製盤器與你們中國生產的克拉克瓷（Kraak porcelain）碗中呢！',
+        'y （細細端詳）果然如此！話說你怎麼會有這件畫作...？',
+        'hide image gallery_014 with fadeOut',
+        's 別問那麼多...外國人的事情你不要知道的好！',
+        's 我們歐洲人甚至有仿製你們的瓷器呢～',
+        'show image gallery_015 with fadeIn',
+        'y 像是什麼呢！',
+        's 台夫特陶器（Delft pottery、Delftware），是荷蘭對明朝青花瓷的模仿，經本土演繹後逐漸形成了自己獨特的風格，成為荷蘭國家級的文化象徵之一呢！',
+        'hide image gallery_015 with fadeOut',   
         's 來吧小兄弟，讓我展示幾件和異國有關的瓷器！',
         '於是，你和薩利姆一起在碼頭的貨倉裡，欣賞了幾件大明外銷的珍品：',
 
-        function () {
-        // 1. 動態注入名瓷鑑賞專屬的精美 CSS 樣式（精準 RWD 補強，絕不擠壓）
+        function startPorcelainGallery() {
+        // =========================================================================
+        // 🛡️ 1. 防護機制：動態注入名瓷鑑賞專屬的精美 CSS 樣式
+        // =========================================================================
         if (!document.getElementById('porcelain-gallery-style')) {
             const style = document.createElement('style');
             style.id = 'porcelain-gallery-style';
@@ -1867,7 +1913,18 @@ monogatari.script ({
             document.head.appendChild(style);
         }
 
-        // 2. 建立小遊戲的 UI 結構
+        // =========================================================================
+        // 🛡️ 2. 防護機制：清理舊 UI 與重置全域鍵盤監聽（應對回溯與存讀檔安全）
+        // =========================================================================
+        const oldOverlay = document.getElementById('gallery-overlay');
+        if (oldOverlay) {
+            oldOverlay.remove();
+        }
+        if (window.porcelainGalleryBlockKeys) {
+            window.removeEventListener('keydown', window.porcelainGalleryBlockKeys, true);
+        }
+
+        // 建立小遊戲的 UI 結構
         const galleryOverlay = document.createElement('div');
         galleryOverlay.id = 'gallery-overlay';
         
@@ -1922,6 +1979,26 @@ monogatari.script ({
         `;
         document.body.appendChild(galleryOverlay);
 
+        // =========================================================================
+        // 🛡️ 3. 【全新機制】全面封鎖 Monogatari 背景偷跑（點擊與鍵盤劫持盾）
+        // =========================================================================
+        // (A) 阻止滑鼠點擊穿透到最底層的 Monogatari 劇情層
+        galleryOverlay.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // (B) 強行攔截並沒收 空白鍵 / Enter / 方向鍵，不讓 Monogatari 偵測到
+        window.porcelainGalleryBlockKeys = function (e) {
+            const keysToBlock = [' ', 'Enter', 'ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'];
+            if (keysToBlock.includes(e.key)) {
+                e.preventDefault();
+                e.stopPropagation(); // 在捕獲階段直接截斷，不讓事件冒泡到 window
+            }
+        };
+        // 第三個參數設為 true（使用 Capture 捕獲模式），確保優先權高於遊戲引擎
+        window.addEventListener('keydown', window.porcelainGalleryBlockKeys, true);
+
+
         // 3. 設定主角對四個瓷器的台詞文本
         const porcelainIntros = [
             "「典型的外銷瓷，也是鼎鼎大名的克拉克瓷中的一員。克拉克瓷作為遠銷海外的瓷期，多數都是以人物、動物等為主要素材，此件瓷器上所包含的中國花鳥畫不僅是東方的自然美學，同時也蘊含著美好寓意，如畫中鷺鷥與蓮花的組合，代表一路連科，表達對仕途的祈願。此外，開光作為瓷器上劃定裝飾區域的手法，此件器物上則是使用期最為獨特的八角開光，將盤的內壁和外壁以單線或連辮形分隔出八個裝飾區域，而在其內部繪有對稱的花卉、幾何紋飾，從而使布局繁密有序。這種裝飾風格不僅表示歐洲的審美，同時也編織出有別於中國官窯本身嚴謹的風格，更顯自然活潑。」",
@@ -1941,7 +2018,8 @@ monogatari.script ({
 
         // 監聽：點擊 Icon 卡片
         cards.forEach(card => {
-            card.addEventListener('click', function () {
+            card.addEventListener('click', function (e) {
+                e.stopPropagation(); // 安全防護
                 const idx = parseInt(this.getAttribute('data-idx'));
                 const imgSrc = this.querySelector('img').getAttribute('src');
                 
@@ -1984,12 +2062,24 @@ monogatari.script ({
             galleryOverlay.style.transition = 'opacity 0.3s';
             galleryOverlay.style.opacity = '0';
             setTimeout(() => {
+                // =========================================================================
+                // 🛡️ 4. 解除防護機制：安全撤除鍵盤盾，還給玩家正常的劇情操作權
+                // =========================================================================
+                if (window.porcelainGalleryBlockKeys) {
+                    window.removeEventListener('keydown', window.porcelainGalleryBlockKeys, true);
+                    delete window.porcelainGalleryBlockKeys;
+                }
                 galleryOverlay.remove();
-                monogatari.next(); 
+                
+                // 呼叫 Monogatari 推進劇情
+                if (typeof monogatari !== 'undefined' && monogatari.next) {
+                    monogatari.next(); 
+                }
             }, 300);
         });
 
-        return false; // 攔截空白點擊
+        // 告知 Monogatari 暫停自動前進，等待小遊戲通關後手動觸發 next()
+        return false; 
 },
     
     's 哈哈哈！看的甚是投入嘛！怎麼？還有什麼疑問呢？',
@@ -2465,7 +2555,7 @@ monogatari.script ({
         'centered 之後，你便可以回到現實了！',
         
         'show scene background_kiln_interior with fadeIn',
-        'centered 鎮窯內部，窯爐前。此時，窯爐已封好爐門，熱浪陣陣。大師傅再次登場。',
+        'centered 鎮窯內部，窯爐前。此時，窯爐已封好爐門，熱浪陣陣。大師傅一臉嚴肅的矗立在旁......',
         
         'show character m normal at master-giant-left',
         () => {
@@ -2474,10 +2564,19 @@ monogatari.script ({
             return true; 
         },
 
-        'm 哈哈哈！終於到了最關鍵的「投柴燒窯」階段了！',
-        'm 小子！這就是你回去現代的最後機會了！',
-        'y 這次使用的是極為珍貴的「蘇麻離青」釉料，火候必須分毫不差。如果溫度不夠，青花發色會發暗；溫度太高，釉面就會流淌崩壞！',
+        'm 小子，沒想到你成功地來到這裡了......我壓根沒想到你能通關呢！',
+        'y ？你這傢伙，是瞧不起我......',
+        'm 住嘴！懂不懂得尊師重道啊！總之，這邊就是最後一道關卡了。通常我們會讓坯體放置一至四週烘乾。',
+        'm 不過，女神大人出了點力，我們就直接把上完釉的坯體放進窯裡燒製！',
+        'y 女神？你口中的女神就是那個類似西方幻想遊戲會出現的傢伙...',
+        'm 哈哈哈！總之，終於到了最關鍵的「投柴燒窯」階段了！',
+        'm 這個步驟最重要的部分便是溫度的控制，窯溫通常介於1200°C 到 1300°C 之間，溫度不夠，瓷器燒不熟，溫度太高，瓷器又可能會變形。',
+        'm 小子！這就是你回去現實的最後機會了，給我好好幹！',
+        'm 這次使用的是極為珍貴的「蘇麻離青」釉料，火候必須分毫不差。如果溫度不夠，青花發色會發暗；溫度太高，釉面就會流淌崩壞！',
+        'y 那麼...我到底該做什麼？',
         'm 聽好了！當火候指針進入中央的「金色節點」時，立刻按下控溫機關！',
+        'y 不能在過程中隨時確認坯體的狀態嗎？',
+        'm 絕對不行！這個過程中絕對不能把窯打開來看，每個環節都必須精準把控，要是一個不小心，整座窯的心血都將白費！',
         'jump Final_challenge'
     ],
         // 🎮 核心小遊戲代碼注入
@@ -2630,6 +2729,7 @@ monogatari.script ({
         'y 我這是...回來了？',
         'y 討厭的女神，竟然把我綁到大明...差點要和天子一起守國門了',
         'y 不過，拜此次經驗，倒是習得不少瓷器的知識！',
+        'y 原來，那些教科書上冷冰冰的知識，也是有一群人曾經努力的活著的證明啊...',
         'y 這趟旅程還真是讓我收穫良多...果然，大明瓷器太厲害了拉！',
         'centered 【大洋上的瓷風：明代瓷器藝術交流】— 完 —',
         'end' 

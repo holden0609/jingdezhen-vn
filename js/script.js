@@ -1072,19 +1072,19 @@ monogatari.script ({
                 <div class="gallery-subtitle">點擊各尊瓷器仔細鑑賞，全數觀摩完畢後方可繼續前進</div>
                 
                 <div class="gallery-grid">
-                    <div class="gallery-card" data-idx="0">
+                    <div class="gallery-card" data-idx="0" tabindex="0" role="button" aria-label="釉里紅三友帶蓋瓷梅瓶，點擊展開詳細鑑賞">
                         <div class="porcelain-icon"><img src="${getImgUrl('gallery_001')}" alt="青花"></div>
                         <div class="porcelain-name">釉里紅三友帶蓋瓷梅瓶</div>
                     </div>
-                    <div class="gallery-card" data-idx="1">
+                    <div class="gallery-card" data-idx="1" tabindex="1" role="button" aria-label="鬥彩雞缸杯，點擊展開詳細鑑賞">
                         <div class="porcelain-icon"><img src="${getImgUrl('gallery_002')}" alt="玲瓏"></div>
                         <div class="porcelain-name">鬥彩雞缸杯</div>
                     </div>
-                    <div class="gallery-card" data-idx="2">
+                    <div class="gallery-card" data-idx="2" tabindex="2" role="button" aria-label="青花一把蓮盤">
                         <div class="porcelain-icon"><img src="${getImgUrl('gallery_003')}" alt="粉彩"></div>
                         <div class="porcelain-name">青花一把蓮盤</div>
                     </div>
-                    <div class="gallery-card" data-idx="3">
+                    <div class="gallery-card" data-idx="3" tabindex="3" role="button" aria-label="青瓷劃花蓮瓣碗">
                         <div class="porcelain-icon"><img src="${getImgUrl('gallery_004')}" alt="顏色釉"></div>
                         <div class="porcelain-name">青瓷劃花蓮瓣碗</div>
                     </div>
@@ -1936,19 +1936,19 @@ monogatari.script ({
                 <div class="gallery-subtitle">點擊各尊瓷器仔細鑑賞，全數觀摩完畢後方可繼續前進</div>
                 
                 <div class="gallery-grid">
-                    <div class="gallery-card" data-idx="0">
+                    <div class="gallery-card" data-idx="0" tabindex="0" role="button" aria-label="青花花鳥紋瓷盤，點擊展開詳細鑑賞">
                         <div class="porcelain-icon"><img src="${getImgUrl('gallery_005')}" alt="青花"></div>
                         <div class="porcelain-name">青花花鳥紋瓷盤</div>
                     </div>
-                    <div class="gallery-card" data-idx="1">
+                    <div class="gallery-card" data-idx="1" tabindex="1" role="button" aria-label="瓶(錫釉陶器)，點擊展開詳細鑑賞">
                         <div class="porcelain-icon"><img src="${getImgUrl('gallery_006')}" alt="玲瓏"></div>
                         <div class="porcelain-name">瓶(錫釉陶器)</div>
                     </div>
-                    <div class="gallery-card" data-idx="2">
+                    <div class="gallery-card" data-idx="2" tabindex="2" role="button" aria-label="青花纏枝花卉紋執壺，點擊展開詳細鑑賞">
                         <div class="porcelain-icon"><img src="${getImgUrl('gallery_007')}" alt="粉彩"></div>
                         <div class="porcelain-name">青花纏枝花卉紋執壺</div>
                     </div>
-                    <div class="gallery-card" data-idx="3">
+                    <div class="gallery-card" data-idx="3" tabindex="3" role="button" aria-label="青花雲鶴紋提樑罐，點擊展開詳細鑑賞">
                         <div class="porcelain-icon"><img src="${getImgUrl('gallery_008')}" alt="顏色釉"></div>
                         <div class="porcelain-name">青花雲鶴紋提樑罐</div>
                     </div>
@@ -1989,6 +1989,10 @@ monogatari.script ({
 
         // (B) 強行攔截並沒收 空白鍵 / Enter / 方向鍵，不讓 Monogatari 偵測到
         window.porcelainGalleryBlockKeys = function (e) {
+
+            if (e.key === 'Enter' && (document.activeElement.classList.contains('gallery-card') || document.activeElement.tagName === 'BUTTON')) {
+        return; 
+    }
             const keysToBlock = [' ', 'Enter', 'ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown'];
             if (keysToBlock.includes(e.key)) {
                 e.preventDefault();
